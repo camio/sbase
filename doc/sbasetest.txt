@@ -1,0 +1,11 @@
+ sbasetest.txt
+
+@PURPOSE: Collect tests provided by all packages in the sbase package group.
+
+@DESCRIPTION: This package consists of only one component which collects the
+tests of all packages within the sbase package group.
+
+/Component Synopsis
+/------------------
+: 'sbasetest_tests':
+:      Collect all tests in the sbase package group.

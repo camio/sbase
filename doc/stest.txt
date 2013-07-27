@@ -1,0 +1,24 @@
+ stest.txt
+
+@PURPOSE: Provide components to aid the creation of unit tests.
+
+@DESCRIPTION: The stest package contains some general purpose test utilities,
+ some utilities that are well suited for the Boost.Test framework, and some
+ general guidelines as to how tests should be organized.
+ 
+ For more information on organization, see the examples given in the
+ stest_testcollector component.
+
+/Component Synopsis
+/------------------
+: 'stest_mastersuitetestcollector':
+:      A means to add tests to the Boost.Test master suite.
+:
+: 'stest_serialization'
+:      Provide tools that simplify Boost.Serilization unittest creation.
+:
+: 'stest_testcollector'
+:      Provide an interface for collecting tests in a component or packages.
+:
+: 'stest_tests'
+:      Collect all tests in the stest package.

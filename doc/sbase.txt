@@ -1,0 +1,15 @@
+ sbase.txt
+
+@PURPOSE: A general purpose framework for the development of C++ applications.
+
+@MNEMONIC: S base (sbase)
+
+@DESCRIPTION: The base package group contains a variety of simple packages that
+ aid overall C++ development.
+
+/Package Synopsis
+/----------------
+: 'stest':
+:      Provide components to aid the creation of unit tests.
+: 'sbasetest':
+:      Collect tests provided by all packages in the sbase package group.
