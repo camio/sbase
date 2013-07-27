@@ -1,4 +1,4 @@
-NAME=slanggui
+NAME=sbase
 include( ../smake/lib.pri )
 
 ## Dependencies
