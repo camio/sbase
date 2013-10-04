@@ -8,13 +8,13 @@
 //@SEE_ALSO: stest_TestCollector
 //
 //@DESCRIPTION: This component can be used as a means to connect tests defined
-//using the TestCollector interface to the normal Boost.Test testing functions.
+// using the TestCollector interface to the normal Boost.Test testing functions.
 //
-///Usage
-///-----
+// Usage
+// -----
 //
-///Example 1: Write a test application that runs tests on a particular package.
-/// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// Example 1: Write a test application that runs tests on a particular package.
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // For this example, we'll assume a ficticious 'example' package. We presume
 // that the example package is following the testing conventions and has a
 // component called tests that includes a tests function that takes in a
@@ -57,14 +57,12 @@
 
 #include <stest/testcollector.hpp>
 
-namespace stest
-{
-  // A test collector that adds all tests to the Boost.Test master test suite.
-  struct MasterSuiteTestCollector : TestCollector
-  {
-  private:
-    void handleAddTest( boost::unit_test::test_case * const ) override;
-  };
+namespace stest {
+// A test collector that adds all tests to the Boost.Test master test suite.
+struct MasterSuiteTestCollector : TestCollector {
+ private:
+  void handleAddTest(boost::unit_test::test_case* const) override;
+};
 }
 
 #endif

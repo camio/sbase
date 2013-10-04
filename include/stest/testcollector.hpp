@@ -3,7 +3,8 @@
 
 //@PURPOSE: Provide an interface for collecting tests in a component or packages
 //
-//@CLASSES: stest::TestCollector
+//@CLASSES:
+//  stest::TestCollector: consumer of unit test functions
 //
 //@SEE_ALSO: stest_MasterSuiteTestCollector
 //
@@ -12,11 +13,11 @@
 // the component level, the package level, and the package group level with
 // conventions defined in the examples below.
 //
-///Usage
-///-----
+// Usage
+// -----
 //
-///Example 1: Tests defined for a particular component.
-/// - - - - - - - - - - - - - - - - - - - - - - - - - -
+// Example 1: Tests defined for a particular component.
+// - - - - - - - - - - - - - - - - - - - - - - - - - -
 // Lets say we are writing tests for an Optional type that is similar to the
 // Boost.Optional library. Lets say component is called optional and it is in
 // the 'example' package. Here is the header that defines the 'optionalTests'
@@ -90,7 +91,7 @@
 // Here we defined two tests. The convention is to use
 // "<package_name>_<component_name>_<namedtest>" as the names of the test cases.
 //
-///Example 2: Tests defined for a particular package.
+/// Example 2: Tests defined for a particular package.
 /// - - - - - - - - - - - - - - - - - - - - - - - - -
 // Each package should create a component called 'test' that has a test
 // collection function called tests. Consider the header for the example test
@@ -129,7 +130,7 @@
 //  }
 //..
 //
-///Example 3: Tests defined for a particular package group.
+/// Example 3: Tests defined for a particular package group.
 /// - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // Every package group should have a tests package and tests component
 // declaring all the tests for that group. Lets say the 'example' component was
@@ -155,40 +156,32 @@
 //  #include <extest/tests.hpp>
 //
 //  #include <example/tests.hpp>
-//  #include <exorple/tests.hpp>
-//  #include <stest
 //  //...
 //
 //  namespace extest {
 //    void tests( stest::TestCollector & col )
 //    {
 //      example::tests( col );
-//      exorple::tests( col );
 //    }
 //  }
 
 #include <boost/test/unit_test.hpp>
 
 namespace stest {
-    struct TestCollector
-    {
-        // This function is called by the user of TestCollector to register a
-        // new test. If name is null, the results of this call are undefined.
-        template< typename F >
-        void addTest( char * const name, F f )
-        {
-            handleAddTest
-                ( boost::unit_test::make_test_case
-                    ( boost::unit_test::callback0<>( f )
-                    , name
-                    )
-                );
-        }
-    protected:
-        // Child classes are expected to reimplement this function to customize
-        // the functionality of this TestCollector.
-        virtual void handleAddTest( boost::unit_test::test_case * const ) = 0;
-    };
+struct TestCollector {
+  // This function is called by the user of TestCollector to register a
+  // new test. If name is null, the results of this call are undefined.
+  template <typename F>
+  void addTest(char* const name, F f) {
+    handleAddTest(boost::unit_test::make_test_case(
+        boost::unit_test::callback0<>(f), name));
+  }
+
+ protected:
+  // Child classes are expected to reimplement this function to customize
+  // the functionality of this TestCollector.
+  virtual void handleAddTest(boost::unit_test::test_case* const) = 0;
+};
 }
 
 #endif

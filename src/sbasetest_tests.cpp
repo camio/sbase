@@ -3,8 +3,5 @@
 #include <stest/tests.hpp>
 
 namespace sbasetest {
-  void tests( stest::TestCollector & col )
-  {
-    stest::tests( col );
-  }
+void tests(stest::TestCollector& col) { stest::tests(col); }
 }

@@ -1,10 +1,7 @@
 #include <stest/tests.hpp>
 
-#include <stest/serialization.hpp>
+#include <stest/serialization.t.hpp>
 
 namespace stest {
-  void tests( stest::TestCollector & col )
-  {
-    stest::serializationTests( col );
-  }
+void tests(stest::TestCollector& col) { stest::serializationTests(col); }
 }

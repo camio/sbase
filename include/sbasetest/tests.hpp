@@ -8,11 +8,11 @@
 //@SEE_ALSO: stest::TestCollector
 
 namespace stest {
-  struct TestCollector;
+struct TestCollector;
 }
 
 namespace sbasetest {
-  void tests( stest::TestCollector & col );
+void tests(stest::TestCollector& col);
 }
 
 #endif
