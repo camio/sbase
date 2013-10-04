@@ -20,46 +20,60 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - -
 // Lets say we are writing tests for an Optional type that is similar to the
 // Boost.Optional library. Lets say component is called optional and it is in
-// the 'example' package. Here is the header that defines the 'optionalTests'
-// function that collects test cases (include/example/optional.hpp).
+// the 'example' package.
+//
+// First, lets look at 'example/optional.hpp' which declares the type:
 //
 //..
 //  #ifndef EXAMPLE_OPTIONAL_HPP_
 //  #define EXAMPLE_OPTIONAL_HPP_
 //
-//  namespace stest {
-//    struct TestCollector;
-//  }
-//
 //  namespace example {
-//    template< typename T >
-//    class Optional
-//    {
-//    public:
-//      Optional();
-//      Optional( T );
-//      bool operator==( Optional<T> ) const;
-//      bool operator!=( Optional<T> ) const;
-//      bool hasValue( ) const;
-//      // @PRECONDITION: hasValue( ) == true
-//      T getValue( ) const;
-//    private:
-//      bool m_hasValue;
-//      T m_value;
-//    };
-//
-//    void optionalTests( stest::TestCollector & );
+//  template< typename T >
+//  class Optional
+//  {
+//  public:
+//    Optional();
+//    Optional( T );
+//    bool operator==( Optional<T> ) const;
+//    bool operator!=( Optional<T> ) const;
+//    bool hasValue( ) const;
+//    // @PRECONDITION: hasValue( ) == true
+//    T getValue( ) const;
+//  private:
+//    bool m_hasValue;
+//    T m_value;
+//  };
 //  }
 //
 //  #endif
 //..
 //
-// The cpp file (src/example_optional.cpp), defines unit tests from within the
+// 'example/optional.t.hpp' is the header that defines the 'optionalTests'
+// function that collects test cases.
+//
+//..
+//  #ifndef EXAMPLE_OPTIONAL_T_HPP_
+//  #define EXAMPLE_OPTIONAL_T_HPP_
+//
+//  namespace stest {
+//  struct TestCollector;
+//  }
+//
+//  namespace example {
+//  void optionalTests( stest::TestCollector & );
+//  }
+//
+//  #endif
+//..
+//
+// The cpp file 'src/example_optional.t.cpp' defines unit tests from within the
 // optionalTests function.
 //
 //..
-//  #include <example/optional.hpp>
+//  #include <example/optional.t.hpp>
 //
+//  #include <example/optional.hpp>
 //  #include <stest/testcollector.hpp>
 //
 //  namespace example {
@@ -91,8 +105,8 @@
 // Here we defined two tests. The convention is to use
 // "<package_name>_<component_name>_<namedtest>" as the names of the test cases.
 //
-/// Example 2: Tests defined for a particular package.
-/// - - - - - - - - - - - - - - - - - - - - - - - - -
+// Example 2: Tests defined for a particular package.
+// - - - - - - - - - - - - - - - - - - - - - - - - -
 // Each package should create a component called 'test' that has a test
 // collection function called tests. Consider the header for the example test
 // component.
@@ -117,8 +131,8 @@
 //..
 //  #include <example/tests.hpp>
 //
-//  #include <example/optional.hpp>
-//  #include <example/tuple.hpp>
+//  #include <example/optional.t.hpp>
+//  #include <example/tuple.t.hpp>
 //
 //  namespace example {
 //    void tests( stest::TestCollector & col )
@@ -130,8 +144,8 @@
 //  }
 //..
 //
-/// Example 3: Tests defined for a particular package group.
-/// - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// Example 3: Tests defined for a particular package group.
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // Every package group should have a tests package and tests component
 // declaring all the tests for that group. Lets say the 'example' component was
 // part of the 'ex' package group. We would have a 'extest' package with a
@@ -156,12 +170,14 @@
 //  #include <extest/tests.hpp>
 //
 //  #include <example/tests.hpp>
+//  #include <exactly/tests.hpp>
 //  //...
 //
 //  namespace extest {
 //    void tests( stest::TestCollector & col )
 //    {
 //      example::tests( col );
+//      exactly::tests( col );
 //    }
 //  }
 
