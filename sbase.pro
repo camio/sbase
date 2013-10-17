@@ -11,6 +11,7 @@ INCLUDEPATH += $$UTF8_CPP_PATH/source
 ## Sources
 
 SOURCES += src/sbasetest_tests.cpp
+SOURCES += src/sboost_fusionatc.cpp
 SOURCES += src/sboost_fusionfoldr.cpp
 SOURCES += src/sboost_optional.cpp
 SOURCES += src/sboost_serialize.cpp
