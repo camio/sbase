@@ -1,5 +1,5 @@
-#ifndef SBOOST_FUSION_INCLUDE_AT_C_HPP_
-#define SBOOST_FUSION_INCLUDE_AT_C_HPP_
+#ifndef SBOOST_FUSIONATC_HPP_
+#define SBOOST_FUSIONATC_HPP_
 
 #include <boost/fusion/include/at_c.hpp>
 #include <boost/fusion/include/value_at.hpp>
