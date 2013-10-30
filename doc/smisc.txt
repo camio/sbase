@@ -1,0 +1,25 @@
+ smisc.txt
+
+@PURPOSE: Package with miscellaneous utilities that don't quite fit elsewhere.
+
+@MNEMONIC: S miscellaneous (smisc)
+
+@DESCRIPTION: This package contains a collection of commonly useful components
+ that have a very loose grouping.
+
+/Package Synopsis
+/----------------
+: 'smisc_anyserializer':
+:      Provide a datastructure for serializing 'boost::any' values.
+: 'smisc_classserializer':
+:      Provide a structure for serialization for individual types.
+: 'smisc_classserializerutil':
+:      Provide utility operations for 'ClassSerializer' objects.
+: 'smisc_classserializerboostserializableutil':
+:      Provide for creation of 'ClassSerializers' from Serializables.
+: 'smisc_classserializerlexicalcastutil':
+:      Provide for creation of 'ClassSerializers' using Boost.LexicalCast.
+: 'smisc_textiarchivewithanyserializer':
+:      Provide a text-based input archive with 'AnySerializer' support.
+: 'smisc_textoarchivewithanyserializer':
+:      Provide a text-based output archive with 'AnySerializer' support.
