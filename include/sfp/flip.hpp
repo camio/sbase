@@ -1,6 +1,8 @@
 #ifndef SFP_FLIP_HPP_
 #define SFP_FLIP_HPP_
 
+#include <boost/utility/result_of.hpp>
+
 namespace sfp {
 namespace detail {
 template <typename F>
