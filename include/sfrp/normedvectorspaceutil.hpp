@@ -3,6 +3,7 @@
 
 #include <sfrp/behavior.hpp>
 #include <sfrp/util.hpp>
+#include <sfrp/wormhole.hpp>
 #include <smisc/point1d.hpp>
 #include <smisc/normedvectorspace.hpp>
 
@@ -59,13 +60,14 @@ V VectorSpaceUtil_smoothHelper(const smisc::Point1D& ss,
 template <typename V>
 Behavior<V> NormedVectorSpaceUtil::smooth(const Behavior<smisc::Point1D> v,
                                           const Behavior<V> pm) {
-  auto pairWhPm = whOpen(std::make_pair(smisc::zero<V>(), 0.0));
+  auto wh = sfrp::Wormhole<std::pair<V, smisc::Point1D>>(
+      std::make_pair(smisc::zero<V>(), 0.0));
 
-  return pmFirst(whClose(pairWhPm.first,
-                         pmWithTime(pmLift(&VectorSpaceUtil_smoothHelper<V>,
-                                           v,
-                                           pairWhPm.second,
-                                           pmWithTime(pm)))));
+  return pmFirst(
+      wh.setInputBehavior(pmWithTime(pmLift(&VectorSpaceUtil_smoothHelper<V>,
+                                            v,
+                                            wh.outputBehavior(),
+                                            pmWithTime(pm)))));
 }
 }
 

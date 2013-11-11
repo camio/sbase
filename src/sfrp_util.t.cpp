@@ -1,6 +1,7 @@
 #include <sfrp/util.t.hpp>
 
 #include <sfrp/util.hpp>
+#include <stest/testcollector.hpp>
 
 namespace {
 class ReturnType {
@@ -49,7 +50,10 @@ void pmLiftCompilationTests() {
                    sfrp::pmConst(v6));
 }
 
-ReturnType allRefs( const Type1&, const Type2& );
+ReturnType allRefs( const Type1&, const Type2& )
+{
+  return rt;
+}
 
 void pmEvLiftCompilationTests() {
   sfrp::Behavior<boost::optional<ReturnType>> r =
@@ -67,5 +71,22 @@ void pmEvLiftCompilationTests() {
                      sfrp::pmConst(v4));
   r = sfrp::pmEvLift(
       allRefs, sfrp::pmConst(boost::make_optional(v1)), sfrp::pmConst(v2));
+}
+}
+
+namespace sfrp {
+void utilTests(stest::TestCollector&col)
+{
+  col.addTest("sfrp_util_pmWithPrev", []()->void {
+    const auto p = sfrp::pmTriggerInfStep(0);
+    const auto b = sfrp::pmWithPrev(-1, p.first);
+
+    BOOST_CHECK(b.pull(0.0) == std::make_pair(-1, 0));
+    BOOST_CHECK(b.pull(1.0) == std::make_pair(0, 0));
+    p.second( 1 );
+    BOOST_CHECK(b.pull(2.0) == std::make_pair(0, 1));
+    p.second( 2 );
+    BOOST_CHECK(b.pull(3.0) == std::make_pair(1, 2));
+  });
 }
 }

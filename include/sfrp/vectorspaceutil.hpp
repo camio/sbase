@@ -3,6 +3,7 @@
 
 #include <sfrp/behavior.hpp>
 #include <sfrp/util.hpp>
+#include <sfrp/wormhole.hpp>
 #include <smisc/point1d.hpp>
 #include <smisc/vectorspace.hpp>
 
@@ -37,9 +38,9 @@ T VectorSpaceUtil_Sum(const T& a, const T& b) {
 ;
 template <typename T>
 Behavior<T> VectorSpaceUtil::sum(const Behavior<T>& v) {
-  auto pairWhPm = whOpen<T>(smisc::zero<T>());
-  return whClose(pairWhPm.first,
-                 pmLift(&VectorSpaceUtil_Sum<T>, pairWhPm.second, v));
+  auto wh = sfrp::Wormhole<T>(smisc::zero<T>());
+  return wh.setInputBehavior(
+      pmLift(&VectorSpaceUtil_Sum<T>, wh.outputBehavior(), v));
 }
 
 template <typename V>

@@ -13,6 +13,7 @@
 #include <scpp/utility.hpp>
 #include <sfp/cf.hpp>
 #include <sfrp/behavior.hpp>
+#include <sfrp/wormhole.hpp>
 #include <smisc/unit.hpp>
 
 /* There are a few event functions that should be written for completeness's
@@ -155,77 +156,6 @@ namespace sfrp
                 , pm1
                 )
             );
-    }
-
-    template< typename T >
-    struct Wormhole
-    {
-        typedef T type;
-        Wormhole( const boost::shared_ptr<boost::optional<T> > & data_ )
-            : data( data_ )
-        {
-        }
-        boost::shared_ptr<boost::optional<T> > data;
-    };
-    namespace detail
-    {
-        template< typename T >
-        struct PMWormhole
-        {
-            PMWormhole( const boost::shared_ptr<boost::optional<T> > & data_ )
-                : data( data_ )
-            {
-            }
-            typedef boost::optional<T> result_type;
-            result_type operator()( const double time ) const
-            {
-                return *data;
-            }
-            boost::shared_ptr<boost::optional<T> > data;
-        };
-    };
-    template< typename T >
-    std::pair
-        < Wormhole<T>
-        , Behavior<T>
-        >
-        whOpen( const T & t0 )
-    {
-        const auto whData = boost::make_shared< boost::optional<T> >( t0 );
-        return std::make_pair
-            ( Wormhole< T >( whData )
-            , Behavior<T>( detail::PMWormhole<T>( whData ) )
-            );
-    }
-    namespace detail
-    {
-        template< typename T >
-        struct PMCloseWormhole
-        {
-            PMCloseWormhole
-                ( const Wormhole<T> & wh_
-                , const Behavior<T> & pm_
-                )
-                : wh( wh_ )
-                , pm( pm_ )
-            {
-            }
-            typedef boost::optional<T> result_type;
-            result_type operator()( const double time ) const
-            {
-                return *wh.data = pm.pull( time );
-            }
-            Wormhole<T> wh;
-            Behavior<T> pm;
-        };
-    };
-    template< typename T >
-    Behavior<T> whClose
-        ( const Wormhole<T> & wh
-        , const Behavior<T> & pm
-        )
-    {
-        return Behavior<T>( detail::PMCloseWormhole<T>( wh, pm ) );
     }
 
     template< typename A, typename B >
@@ -484,11 +414,8 @@ namespace sfrp
     Behavior< std::pair< T, T > >
         pmWithPrev( const T & t0, const Behavior<T> & pm )
     {
-        auto pairWhPm = whOpen( t0 );
-        return pmZip
-            ( pairWhPm.second
-            , whClose( pairWhPm.first, pm )
-            );
+        Wormhole<T> w = Wormhole<T>( t0 );
+        return pmZip(w.outputBehavior(), w.setInputBehavior(pm));
     }
     namespace detail
     {
@@ -831,14 +758,9 @@ namespace sfrp
         , const Behavior< boost::optional<T> > & pm
         )
     {
-        auto whPair = whOpen( t0 );
-        return whClose
-            ( whPair.first
-            , pmLift( &detail::pmStepHelper<T>
-                    , pm
-                    , whPair.second
-                    )
-            );
+        auto w = Wormhole<T>( t0 );
+        return w.setInputBehavior(
+            pmLift(&detail::pmStepHelper<T>, pm, w.outputBehavior()));
     }
     
     template< typename A>
