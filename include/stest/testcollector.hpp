@@ -116,11 +116,11 @@
 //  #define EXAMPLE_TESTS_HPP_
 //
 //  namespace stest {
-//    struct TestCollector;
+//  struct TestCollector;
 //  }
 //
 //  namespace example {
-//    void tests( stest::TestCollector & );
+//  void tests(stest::TestCollector&);
 //  }
 //  #endif
 //..
@@ -135,12 +135,11 @@
 //  #include <example/tuple.t.hpp>
 //
 //  namespace example {
-//    void tests( stest::TestCollector & col )
-//    {
-//      optionalTests( col );
-//      tupleTests( col );
-//      //...
-//    }
+//  void tests( stest::TestCollector & col ) {
+//    optionalTests( col );
+//    tupleTests( col );
+//    //...
+//  }
 //  }
 //..
 //
