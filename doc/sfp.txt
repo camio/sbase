@@ -1,0 +1,15 @@
+ sfp.txt
+
+@PURPOSE: Package with functional programming utilities.
+
+@MNEMONIC: S functional programming (sfp)
+
+@DESCRIPTION: This package contains a collection of commonly useful components
+ related to functional programming.
+
+/Package Synopsis
+/----------------
+: 'smisc_cf':
+:      Provide routines that make curried versions of functions. 
+: 'smisc_ciof':
+:      Provide routines to curry IO functions.

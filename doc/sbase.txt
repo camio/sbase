@@ -7,8 +7,12 @@
 @DESCRIPTION: The base package group contains a variety of simple packages that
  aid overall C++ development.
 
-/Package Synopsis
-/----------------
+/Package Group Synopsis
+/----------------------
+: 'sfp':
+:      Package with functional programming utilities.
+: 'smisc':
+:      Package with miscellaneous utilities that don't quite fit elsewhere.
 : 'stest':
 :      Provide components to aid the creation of unit tests.
 : 'sbasetest':
