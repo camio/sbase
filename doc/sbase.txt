@@ -7,10 +7,12 @@
 @DESCRIPTION: The base package group contains a variety of simple packages that
  aid overall C++ development.
 
-/Package Group Synopsis
-/----------------------
+/Package Synopsis
+/----------------
 : 'sfp':
 :      Package with functional programming utilities.
+: 'sfrp':
+:      Framework for functional reactive programming in C++.
 : 'smisc':
 :      Package with miscellaneous utilities that don't quite fit elsewhere.
 : 'stest':

@@ -7,8 +7,8 @@
 @DESCRIPTION: This package contains a collection of commonly useful components
  related to functional programming.
 
-/Package Synopsis
-/----------------
+/Component Synopsis
+/------------------
 : 'smisc_cf':
 :      Provide routines that make curried versions of functions. 
 : 'smisc_ciof':

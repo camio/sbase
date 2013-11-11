@@ -4,6 +4,14 @@
 #include <sfrp/wormhole.hpp>
 #include <stest/testcollector.hpp>
 
+template <typename T>
+static sfrp::Behavior<std::pair<T, T>> pmWithPrev(const T& initialValue,
+                                                  const sfrp::Behavior<T>& b)
+{
+  Wormhole<T> w = Wormhole<T>(initialValue);
+  return pmZip(w.outputBehavior(), w.setInputBehavior(b));
+}
+
 namespace sfrp{
 void wormholeTests(stest::TestCollector& col)
 {
