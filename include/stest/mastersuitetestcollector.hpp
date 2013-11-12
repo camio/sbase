@@ -19,10 +19,11 @@
 // that the example package is following the testing conventions and has a
 // component called tests that includes a tests function that takes in a
 // reference to a stest::TestCollector.
-//..
-//  #include <example/test.hpp>
-//  #include <stest/mastersuitetestcollector.hpp>
 //
+// Note that all the defines must come before inclusion of
+// 'stest/mastersuitetestcollector.hpp'. Otherwise a compilation error will
+// likely result.
+//..
 //  // Renames the master test suite
 //  #define BOOST_TEST_MODULE example test suite
 //
@@ -38,6 +39,10 @@
 //
 //  // Include all of unit_test's component.
 //  #include <boost/test/included/unit_test.hpp>
+//
+//  #include <example/test.hpp>
+//  #include <stest/mastersuitetestcollector.hpp>
+//
 //
 //  static bool registerTests()
 //  {
