@@ -9,6 +9,10 @@
 #include <boost/fusion/include/back.hpp>
 
 namespace sboost {
+
+// TODO: This inner namespace needs to be removed for our coding conventions.
+// Also, these functions should be moved into possibly a 'FusionFold1' namespace
+// class.
 namespace fusion {
 namespace result_of {
 template <typename Sequence, typename F>
@@ -43,6 +47,8 @@ struct foldl1 {
 };
 }
 
+// TODO: I don't think the semantics of this function are what's normally
+// expected of a foldl1. This needs to be checked and possibly modified.
 template <typename Sequence, typename F>
 typename result_of::foldl1<Sequence, F>::type foldl1(Sequence& seq,
                                                      F const& f) {
