@@ -9,6 +9,8 @@
 
 /Package Synopsis
 /----------------
+: 'sboost':
+:      Utilities that extend the Boost library's functionality.
 : 'sfp':
 :      Package with functional programming utilities.
 : 'sfrp':
