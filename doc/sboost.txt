@@ -1,0 +1,14 @@
+ sboost.txt
+
+@PURPOSE: Utilities that extend the Boost library's functionality.
+
+@MNEMONIC: S boost (sboost)
+
+@DESCRIPTION: This package implements a collection of components that extend
+ boost functionality in a direct way. These components would fit well in the
+ Boost libraries they apply to.
+
+/Component Synopsis
+/------------------
+: 'sboost_fusionatc':
+:      Provide a 'fusion::at_c' that is usable in higher order functions.

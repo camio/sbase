@@ -9,6 +9,14 @@
 
 /Package Synopsis
 /----------------
+: 'sboost':
+:      Utilities that extend the Boost library's functionality.
+: 'sfp':
+:      Package with functional programming utilities.
+: 'sfrp':
+:      Framework for functional reactive programming in C++.
+: 'smisc':
+:      Package with miscellaneous utilities that don't quite fit elsewhere.
 : 'stest':
 :      Provide components to aid the creation of unit tests.
 : 'sbasetest':

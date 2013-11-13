@@ -1,0 +1,13 @@
+ sfrp.txt
+
+@PURPOSE: Framework for functional reactive programming in C++.
+
+@MNEMONIC: S functional reactive programming (sfrp)
+
+@DESCRIPTION: This package implements a collection of components that support
+ functional reactive programming style.
+
+/Component Synopsis
+/------------------
+: 'sfrp_wormhole':
+:      Provide a means to create circular dependencies in FRP graphs.
