@@ -7,6 +7,15 @@
 @DESCRIPTION: The base package group contains a variety of simple packages that
  aid overall C++ development.
 
+/Levelization
+/------------
+
+ scpp stest 
+ sboost sfp 
+ smisc 
+ sfrp
+ sbasetest
+
 /Package Synopsis
 /----------------
 : 'sboost':
