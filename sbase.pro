@@ -61,6 +61,7 @@ SOURCES += src/smisc_tests.cpp
 SOURCES += src/smisc_textiarchivewithanyserializer.cpp
 SOURCES += src/smisc_textoarchivewithanyserializer.cpp
 SOURCES += src/smisc_totalfiniteorder.cpp
+SOURCES += src/smisc_totalfiniteorder.t.cpp
 SOURCES += src/smisc_vectorspace.cpp
 SOURCES += src/stest_mastersuitetestcollector.cpp
 SOURCES += src/stest_serialization.cpp
