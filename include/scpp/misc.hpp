@@ -47,6 +47,14 @@ auto times(const A& a, const B& b)
           typename boost::remove_const<decltype(a* b)>::type>::type {
   return a * b;
 }
+
+template <typename A, typename B>
+auto divide(const A& a, const B& b)
+    -> typename boost::remove_reference<
+          typename boost::remove_const<decltype(a* b)>::type>::type {
+  return a / b;
+}
+
 template <typename A>
 auto negate(const A& a)
     -> typename boost::remove_reference<
