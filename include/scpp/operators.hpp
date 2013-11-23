@@ -11,7 +11,9 @@
 // operators need to be passed to higher order functions (functions that take
 // functions as an argument). Although the standard C++ 'functional' include
 // provides this functionality, it does so with functors instead of functions
-// which are incompatible with some higher order functions.
+// which are incompatible with some higher order functions. The versions
+// provided here also are more general in the types of their arguments in some
+// cases.
 //
 // The naming conventions of these functions intentionally mimics those of the
 // standard C++ 'functional' include while maintaining our own naming
@@ -114,7 +116,7 @@ struct Operators {
 
   // Return 'a ? b : c'.
   template <typename T>
-  static T ifThen(const bool& a, const T& b, const T& c);
+  static T ifThenElse(const bool& a, const T& b, const T& c);
 };
 
 // ===========================================================================
@@ -134,7 +136,7 @@ T Operators::logicalOr(const T& a, const T& b) {
   return a || b;
 }
 template <typename T>
-T Operators::ifThen(const bool& a, const T& b, const T& c) {
+T Operators::ifThenElse(const bool& a, const T& b, const T& c) {
   return a ? b : c;
 }
 template <typename A, typename B>
