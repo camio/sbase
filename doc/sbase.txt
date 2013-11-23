@@ -20,6 +20,8 @@
 /----------------
 : 'sboost':
 :      Utilities that extend the Boost library's functionality.
+: 'scpp':
+:      Utilities that extend the C++ standard library's functionality.
 : 'sfp':
 :      Package with functional programming utilities.
 : 'sfrp':

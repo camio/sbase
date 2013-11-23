@@ -1,0 +1,14 @@
+ scpp.txt
+
+@PURPOSE: Utilities that extend the C++ standard library's functionality.
+
+@MNEMONIC: S C++ (scpp)
+
+@DESCRIPTION: This package implements a collection of components that extend
+ the C++ standard library in a direct way. These components would fit well into
+ the standard library.
+
+/Component Synopsis
+/------------------
+: 'scpp_operators':
+:      Provide named versions of C++ operators.

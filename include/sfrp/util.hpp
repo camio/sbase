@@ -9,7 +9,7 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/utility/result_of.hpp>
 #include <sboost/optional.hpp>
-#include <scpp/misc.hpp>
+#include <scpp/operators.hpp>
 #include <scpp/utility.hpp>
 #include <sfp/cf.hpp>
 #include <sfrp/behavior.hpp>
@@ -977,22 +977,22 @@ namespace sfrp
     }
     template< typename A, typename B >
     inline auto operator-( const Behavior<A> & a, const Behavior<B> & b )
-        -> decltype( pmLift( scpp::minus<A,B>, a, b ) )
+        -> decltype( pmLift( scpp::Operators::minus<A,B>, a, b ) )
     {
-        return pmLift( scpp::minus<A,B>, a, b );
+        return pmLift( scpp::Operators::minus<A,B>, a, b );
     }
     template< typename A, typename B >
     inline auto operator+( const Behavior<A> & a, const Behavior<B> & b )
-        -> decltype( pmLift( scpp::plus<A,B>, a, b ) )
+        -> decltype( pmLift( scpp::Operators::plus<A,B>, a, b ) )
     {
-        return pmLift( scpp::plus<A,B>, a, b );
+        return pmLift( scpp::Operators::plus<A,B>, a, b );
     }
 
     template< typename A >
     inline auto operator-( const Behavior<A> & a )
-        -> decltype( pmApp( scpp::negate<A>, a ) )
+        -> decltype( pmApp( scpp::Operators::negate<A>, a ) )
     {
-        return pmApp( scpp::negate<A>, a );
+        return pmApp( scpp::Operators::negate<A>, a );
     }
 
     template< typename A >
@@ -1002,7 +1002,7 @@ namespace sfrp
         )
     {
         return pmLift
-            ( scpp::iff< boost::optional<A> >
+            ( scpp::Operators::iff< boost::optional<A> >
             , b
             , a
             , pmConst( boost::optional<A>() )
