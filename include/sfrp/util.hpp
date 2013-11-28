@@ -561,7 +561,7 @@ namespace sfrp
         };
     }
 
-    /** ( pm : Behavior (Maybe (Behavior a)) ) → Behavior (Maybe a)
+    /** pmJoin : Behavior (Maybe (Behavior a)) → Behavior (Maybe a)
      * 
      *  Flattens a specially typed and specially valued Behavior.
      *
