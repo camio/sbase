@@ -12,3 +12,5 @@
 /------------------
 : 'scpp_operators':
 :      Provide named versions of C++ operators.
+: 'scpp_vectorutil':
+:      Provide utility functions for 'std::vector' objects.
