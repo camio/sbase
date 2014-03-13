@@ -1,6 +1,7 @@
 #include <smisc/doc.hpp>
+
 #include <boost/bind.hpp>
-#include <utf8.h>
+#include <smisc/utf8util.hpp>
 #include <ostream>
 
 namespace smisc
@@ -20,7 +21,7 @@ namespace smisc
                       ) const
         {
             os << s;
-            return utf8::distance( s.begin(), s.end() ) + pos;
+            return smisc::Utf8Util::length( s ) + pos;
         }
         DT operator()( std::ostream & os
                       , const DT pos

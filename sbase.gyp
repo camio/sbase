@@ -141,7 +141,6 @@
                 '../boost-gyp/boost.gyp:boost.headers',
                 '../boost-gyp/boost.gyp:boost.thread',
                 '../boost-gyp/boost.gyp:boost.serialization',
-                '../utf8-gyp/utf8.gyp:utf8',
                 'sboost',
                 'stest',
             ],

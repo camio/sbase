@@ -5,9 +5,6 @@ include( ../smake/lib.pri )
 
 addBoostDependency($$BOOST_PATH)
 
-# utf8 is special
-INCLUDEPATH += $$UTF8_CPP_PATH/source
-
 ## Sources
 
 SOURCES += src/sbasetest_tests.cpp
