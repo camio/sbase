@@ -23,3 +23,5 @@
 :      Provide a text-based input archive with 'AnySerializer' support.
 : 'smisc_textoarchivewithanyserializer':
 :      Provide a text-based output archive with 'AnySerializer' support.
+: 'smisc_utf8util':
+:      Provide utility operations covering UTF-8 encodings.
