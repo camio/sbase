@@ -9,8 +9,8 @@ addBoostDependency($$BOOST_PATH)
 
 SOURCES += src/sbasetest_tests.cpp
 SOURCES += src/sboost_fusionatc.cpp
-SOURCES += src/sboost_fusionfoldr.cpp
-SOURCES += src/sboost_fusionfoldr.t.cpp
+SOURCES += src/sboost_fusionfoldutil.cpp
+SOURCES += src/sboost_fusionfoldutil.t.cpp
 SOURCES += src/sboost_optional.cpp
 SOURCES += src/sboost_serialize.cpp
 SOURCES += src/sboost_tests.cpp

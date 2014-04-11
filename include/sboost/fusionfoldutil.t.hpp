@@ -5,6 +5,6 @@ namespace stest {
 struct TestCollector;
 }
 namespace sboost {
-void fusionfoldrTests(stest::TestCollector&);
+void fusionfoldutilTests(stest::TestCollector&);
 };
 #endif

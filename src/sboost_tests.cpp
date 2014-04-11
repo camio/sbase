@@ -1,10 +1,10 @@
 #include <sboost/tests.hpp>
 
-#include <sboost/fusionfoldr.t.hpp>
+#include <sboost/fusionfoldutil.t.hpp>
 
 namespace sboost {
 void tests(stest::TestCollector& col) {
-  fusionfoldrTests(col);
+  fusionfoldutilTests(col);
 }
 }
 
