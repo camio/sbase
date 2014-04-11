@@ -8,7 +8,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/utility/result_of.hpp>
-#include <sboost/optional.hpp>
+#include <sboost/optionalutil.hpp>
 #include <scpp/operators.hpp>
 #include <scpp/utility.hpp>
 #include <sfp/cf.hpp>
