@@ -50,7 +50,7 @@
 //          typename boost::remove_reference<T>::type>::type TValue;
 //      typedef typename boost::remove_const<
 //          typename boost::remove_reference<U>::type>::type UValue;
-//  
+//
 //      typedef typename boost::mpl::if_<
 //          typename boost::mpl::or_<boost::is_same<TValue, float>,
 //                                   boost::is_same<UValue, float>>::type,
@@ -72,7 +72,8 @@
 // function.
 //..
 //  template <typename Sequence>
-//  auto minimum(Sequence s) -> decltype(sboost::FusionFoldUtil::foldl1(s, Min())) {
+//  auto minimum(Sequence s) -> decltype(sboost::FusionFoldUtil::foldl1(s,
+// Min())) {
 //    return sboost::FusionFoldUtil::foldl1(s, Min());
 //  }
 //..
@@ -115,7 +116,7 @@ struct FusionFoldUtil {
   // 'binaryFunction' is 'f', this function will return '…f( v₁, f(v₂, v₃) )…'.
   template <typename Sequence, typename F>
   static typename FusionFoldUtil_Foldr1Result<Sequence, F>::type foldr1(
-      Sequence& nonemptySequence,
+      const Sequence& nonemptySequence,
       F const& binaryFunction);
 
   // Recursively call the specified 'binaryFunction' on the spencified
@@ -127,8 +128,8 @@ struct FusionFoldUtil {
   // 'binaryFunction' is 'f', this function will return '…f( f(v₁, v₂), v₃ )…'.
   template <typename Sequence, typename F>
   static typename FusionFoldUtil_Foldl1Result<Sequence, F>::type foldl1(
-      Sequence& seq,
-      F const& f);
+      const Sequence& nonemptySequence,
+      F const& binaryFunction);
 };
 
 // ===========================================================================
@@ -167,19 +168,16 @@ struct FusionFoldUtil_Flipped {
 
 template <typename Sequence, typename F>
 struct FusionFoldUtil_Foldr1Result {
-  typedef typename boost::fusion::result_of::pop_back<Sequence const>::type
-      Sequence2;
+  typedef typename boost::fusion::result_of::pop_back<Sequence>::type Sequence2;
   typedef typename boost::fusion::result_of::back<Sequence>::type State;
 
-  typedef typename boost::fusion::result_of::reverse_fold<
-      Sequence2,
-      State,
-      FusionFoldUtil_Flipped<F>>::type type;
+  typedef typename boost::fusion::result_of::
+      reverse_fold<Sequence2, State, FusionFoldUtil_Flipped<F>>::type type;
 };
 
 template <typename Sequence, typename F>
 typename FusionFoldUtil_Foldr1Result<Sequence, F>::type FusionFoldUtil::foldr1(
-    Sequence& seq,
+    const Sequence& seq,
     F const& f) {
   return boost::fusion::reverse_fold(boost::fusion::pop_back(seq),
                                      boost::fusion::back(seq),
@@ -198,7 +196,7 @@ struct FusionFoldUtil_Foldl1Result {
 
 template <typename Sequence, typename F>
 typename FusionFoldUtil_Foldl1Result<Sequence, F>::type FusionFoldUtil::foldl1(
-    Sequence& seq,
+    const Sequence& seq,
     F const& f) {
   return boost::fusion::fold(
       boost::fusion::pop_front(seq), boost::fusion::front(seq), f);
