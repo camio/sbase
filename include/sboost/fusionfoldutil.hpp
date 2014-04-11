@@ -1,5 +1,85 @@
-#ifndef SBOOST_FUSION_FOLDR1_HPP_
-#define SBOOST_FUSION_FOLDR1_HPP_
+#ifndef SBOOST_FUSION_FOLDUTIL_HPP_
+#define SBOOST_FUSION_FOLDUTIL_HPP_
+
+//@PURPOSE: Provide fold operations for Boost.Fusion sequences.
+//
+//@CLASSES:
+//  sboost::FusionFoldUtil_Foldr1Result: foldr1 result type computation
+//  sboost::FusionFoldUtil_Foldl1Result: foldl1 result type computation
+//  sboost::FusionFoldUtil: Boost.Fusion fold operation namespace
+//
+//@DESCRIPTION: This component provides fold functions that operate on
+// Boost.Fusion sequences. These fold functions extend what is already
+// available from the Boost.Fusion library. The generic functions contained
+// here are sometimes useful when the need arises to collapse a fusion
+// sequence.
+//
+// The classes 'FusionFoldUtil_Foldr1Result' and 'FusionFoldUtil_Foldl1Result'
+// are template metafunctions for computing the result types of
+// 'FusionFoldUtil::foldr1' and 'FusionFoldUtil::foldl1'. They serve the same
+// purpose as classes in the 'result_of' namespace in the Boost.Fusion library.
+//
+// The names of 'foldr1()' and 'foldl1()' were chosen to intentionally mimic
+// Haskell's versions of these functions.
+//
+// 'foldr1()' will use a specified function to fold a Boost.Fusion sequence
+// from right to left. The '1' indiciates the compile-time requirement that
+// this sequence has at least one element.
+//
+// 'foldl1()' will use a specified function to fold a Boost.Fusion sequence
+// from left to right. The '1', again, indiciates the compile-time requirement
+// that this sequence has at least one element.
+//
+// Usage
+// -----
+// This section illustrates intended use of this component.
+//
+// Example 1: Heterogenius Minimum
+// - - - - - - - - - - - - - - - -
+// In this example, we'll be constructing a heterogenius 'minimum' function
+// that operations on fusion sequences of 'int's, 'float's, or some mixture. We
+// start by defining a 'Min' functor that does the same for two elements.
+//..
+//  struct Min {
+//    template <typename T>
+//    struct result;
+//
+//    template <typename T, typename U>
+//    struct result<Min(T, U)> {
+//      typedef typename boost::remove_const<
+//          typename boost::remove_reference<T>::type>::type TValue;
+//      typedef typename boost::remove_const<
+//          typename boost::remove_reference<U>::type>::type UValue;
+//  
+//      typedef typename boost::mpl::if_<
+//          typename boost::mpl::or_<boost::is_same<TValue, float>,
+//                                   boost::is_same<UValue, float>>::type,
+//          float,
+//          int>::type type;
+//    };
+//
+//    int operator()(int i, int j) const { return std::min(i, j); }
+//    float operator()(int i, float j) const { return std::min(float(i), j); }
+//    float operator()(float i, float j) const { return std::min(i, j); }
+//    float operator()(float i, int j) const { return std::min(i, float(j)); }
+//  };
+//..
+// The 'Min::result' type is a template metafunction that computes the result
+// type of this functor in the standard way. This format is required for uses
+// of the sboost_fusionfoldutil functions (and Boost.Fusion in general).
+//
+// We now make use of the 'foldl1()' function to write our heterogenius minimum
+// function.
+//..
+//  template <typename Sequence>
+//  auto minimum(Sequence s) -> decltype(sboost::FusionFoldUtil::foldl1(s, Min())) {
+//    return sboost::FusionFoldUtil::foldl1(s, Min());
+//  }
+//..
+// If this function is passed a Boost.Fusion sequence of all 'int's, it will
+// return an 'int'. If there is at least one 'float', it will return a float.
+// If, on the other hand, the argument is empty, a compilation error will
+// occur.
 
 #include <boost/fusion/include/fold.hpp>
 #include <boost/fusion/include/reverse_fold.hpp>
@@ -23,7 +103,7 @@ template <typename Sequence, typename F>
 struct FusionFoldUtil_Foldl1Result;
 
 // This class provides a namespace for various fold functions that operate on
-// fusion sequences.
+// Boost.Fusion sequences.
 struct FusionFoldUtil {
 
   // Recursively call the specified 'binaryFunction' on the spencified

@@ -1,12 +1,57 @@
 #include <sboost/fusionfoldutil.t.hpp>
 
+#include <boost/fusion/include/make_vector.hpp>
 #include <boost/fusion/include/vector.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/mpl/or.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <sboost/fusionfoldutil.hpp>
 #include <stest/testcollector.hpp>
+#include <algorithm>  // std::min
 #include <string>
 #include <vector>
+
+namespace {
+
+struct Min {
+  template <typename T>
+  struct result;
+
+  template <typename T, typename U>
+  struct result<Min(T, U)> {
+    typedef typename boost::remove_const<
+        typename boost::remove_reference<T>::type>::type TValue;
+    typedef typename boost::remove_const<
+        typename boost::remove_reference<U>::type>::type UValue;
+
+    typedef typename boost::mpl::if_<
+        typename boost::mpl::or_<boost::is_same<TValue, float>,
+                                 boost::is_same<UValue, float>>::type,
+        float,
+        int>::type type;
+  };
+
+  int operator()(int i, int j) const { return std::min(i, j); }
+  float operator()(int i, float j) const { return std::min(float(i), j); }
+  float operator()(float i, float j) const { return std::min(i, j); }
+  float operator()(float i, int j) const { return std::min(i, float(j)); }
+};
+
+template <typename Sequence>
+auto minimum(Sequence s) -> decltype(sboost::FusionFoldUtil::foldl1(s, Min())) {
+  return sboost::FusionFoldUtil::foldl1(s, Min());
+}
+
+void testExample()
+{
+  const auto vector0 = boost::fusion::make_vector( 3, 22.5f, 0 );
+  const auto vector1 = boost::fusion::make_vector( 3, 6, 0 );
+
+  float vector0Min = minimum( vector0 );
+  int vector1Min = minimum( vector1 );
+}
+}
 
 namespace {
 struct StringConcatRight {
