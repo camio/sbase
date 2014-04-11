@@ -88,6 +88,7 @@
 #include <boost/fusion/include/front.hpp>
 #include <boost/fusion/include/pop_back.hpp>
 #include <boost/fusion/include/back.hpp>
+#include <boost/utility/result_of.hpp>
 
 namespace sboost {
 
