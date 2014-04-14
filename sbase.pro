@@ -19,7 +19,6 @@ SOURCES += src/sboost_tests.cpp
 SOURCES += src/scpp_operators.cpp
 SOURCES += src/scpp_setutil.cpp
 SOURCES += src/scpp_setutil.t.cpp
-SOURCES += src/scpp_string.cpp
 SOURCES += src/scpp_tests.cpp
 SOURCES += src/scpp_utility.cpp
 SOURCES += src/scpp_vectorutil.cpp
