@@ -9,7 +9,7 @@
 
 /Component Synopsis
 /------------------
-: 'smisc_cf':
+: 'sfp_cf':
 :      Provide routines that make curried versions of functions. 
-: 'smisc_ciof':
+: 'sfp_ciof':
 :      Provide routines to curry IO functions.
