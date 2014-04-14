@@ -16,7 +16,6 @@ SOURCES += src/sboost_optionalutil.t.cpp
 SOURCES += src/sboost_serializablestringutil.cpp
 SOURCES += src/sboost_serializablestringutil.t.cpp
 SOURCES += src/sboost_tests.cpp
-SOURCES += src/sboost_variant.cpp
 SOURCES += src/scpp_operators.cpp
 SOURCES += src/scpp_setutil.cpp
 SOURCES += src/scpp_setutil.t.cpp

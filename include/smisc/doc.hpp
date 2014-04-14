@@ -4,10 +4,10 @@
 #include <iosfwd>
 #include <string>
 #include <vector>
-#include <sboost/variant.hpp>
 #include <boost/assign/list_of.hpp>
 #include <boost/fusion/include/pair.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/variant.hpp>
 
 /** \file smisc/doc.hpp
  *  A simple pretty printing library.
