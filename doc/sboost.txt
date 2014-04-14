@@ -14,3 +14,5 @@
 :      Provide a 'fusion::at_c' that is usable in higher order functions.
 : 'sboost_fusionfoldutil':
 :      Provide fold operations for Boost.Fusion sequences.
+: 'sboost_optionalutil':
+:      Provide utility operations for Boost.Optional objects.

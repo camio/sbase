@@ -12,6 +12,7 @@ SOURCES += src/sboost_fusionatc.cpp
 SOURCES += src/sboost_fusionfoldutil.cpp
 SOURCES += src/sboost_fusionfoldutil.t.cpp
 SOURCES += src/sboost_optionalutil.cpp
+SOURCES += src/sboost_optionalutil.t.cpp
 SOURCES += src/sboost_serialize.cpp
 SOURCES += src/sboost_tests.cpp
 SOURCES += src/sboost_variant.cpp

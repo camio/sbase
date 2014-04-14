@@ -770,7 +770,7 @@ namespace sfrp
         , const Behavior< boost::optional<A> > & b
         )
     {
-        return pmLift( sboost::opAlt<A>, a, b );
+        return pmLift( sboost::OptionalUtil::alternative<A>, a, b );
     }
     namespace detail
     {
@@ -1015,7 +1015,7 @@ namespace sfrp
         {
             typedef typename Ev::type OpT;
             typedef typename OpT::value_type T;
-            typedef typename sboost::result_of::opMap<F,T>::type OpU;
+            typedef typename sboost::OptionalUtil_MapResult<F,T>::type OpU;
             typedef Behavior< OpU > type;
         };
     }
@@ -1028,7 +1028,7 @@ namespace sfrp
         typedef typename Ev::type OpA;
         typedef typename OpA::value_type A;
         return pmMap
-            ( sfp::cf( &sboost::opMap<F,A> )( f )
+            ( sfp::cf( &sboost::OptionalUtil::map<F,A> )( f )
             , ev
             );
     }
@@ -1048,7 +1048,7 @@ namespace sfrp
            > & pm
         )
     {
-        return pmMap( sboost::opJoin, pm );
+        return pmMap( sboost::OptionalUtil_Join(), pm );
     }
 
     template< typename A >
