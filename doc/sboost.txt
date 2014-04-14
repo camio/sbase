@@ -16,3 +16,5 @@
 :      Provide fold operations for Boost.Fusion sequences.
 : 'sboost_optionalutil':
 :      Provide utility operations for Boost.Optional objects.
+: 'sboost_serializablestringutil':
+:      Provide conversions to/from strings using Serializable objects.

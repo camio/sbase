@@ -17,7 +17,7 @@
 // -----
 // This section illustrates intended use of this component.
 
-#include <sboost/serialize.hpp>
+#include <sboost/serializablestringutil.hpp>
 #include <smisc/classserializer.hpp>
 
 namespace smisc {
@@ -37,6 +37,7 @@ struct ClassSerializerBoostSerializableUtil {
 // ===========================================================================
 //                 INLINE DEFINITIONS
 // ===========================================================================
+
 template <typename T>
 struct ClassSerializerBoostSerializableUtil_TsfsSave {
   typedef std::string result_type;
@@ -44,18 +45,21 @@ struct ClassSerializerBoostSerializableUtil_TsfsSave {
   std::string operator()(const boost::any& a) const {
     T const* const tPtr = boost::any_cast<T>(&a);
     assert(tPtr);
-    return sboost::serializableToString(*tPtr);
+    return sboost::SerializableStringUtil::toString(*tPtr);
   }
 };
+
 template <typename T>
 struct ClassSerializerBoostSerializableUtil_TsfsLoad {
   typedef boost::any result_type;
   boost::any operator()(const std::string& s) const {
-    const boost::optional<T> opT = sboost::serializableFromString<T>(s);
+    const boost::optional<T> opT =
+        sboost::SerializableStringUtil::fromString<T>(s);
     assert(opT);
     return boost::any(*opT);
   }
 };
+
 template <typename Serializable>
 smisc::ClassSerializer
 ClassSerializerBoostSerializableUtil::classSerializerFromSerializable() {
