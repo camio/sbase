@@ -11,7 +11,9 @@
 /------------------
 : 'sfp_cf':
 :      Provide routines that make curried versions of functions. 
-: 'sfp_ciof':
-:      Provide routines to curry IO functions.
 : 'sfp_cfunc':
 :      Provide metafunction for generating curried Boost.Function types.
+: 'sfp_ciof':
+:      Provide routines to curry IO functions.
+: 'sfp_ciofunc':
+:      Provide metafunction for generating curried IO Boost.Function types.

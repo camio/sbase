@@ -1,6 +1,5 @@
 #include <sfp/cfunc.t.hpp>
 
-#include <boost/type_traits.hpp>
 #include <sfp/cfunc.hpp>
 #include <type_traits>
 
