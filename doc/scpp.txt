@@ -12,7 +12,7 @@
 /------------------
 : 'scpp_operators':
 :      Provide named versions of C++ operators.
-: 'scpp_set':
+: 'scpp_setutil':
 :      Provide utility functions for 'std::set' objects.
 : 'scpp_vectorutil':
 :      Provide utility functions for 'std::vector' objects.
