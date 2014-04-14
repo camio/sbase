@@ -10,7 +10,7 @@
 #include <boost/utility/result_of.hpp>
 #include <sboost/optionalutil.hpp>
 #include <scpp/operators.hpp>
-#include <scpp/utility.hpp>
+#include <scpp/pairutil.hpp>
 #include <sfp/cf.hpp>
 #include <sfrp/behavior.hpp>
 #include <sfrp/wormhole.hpp>
@@ -163,14 +163,14 @@ namespace sfrp
         ( const Behavior< std::pair< A, B > > & pm
         )
     {
-        return pmMap( scpp::first<A,B>, pm );
+        return pmMap( scpp::PairUtil::first<A,B>, pm );
     }
     template< typename A, typename B >
     Behavior<B> pmSecond
         ( const Behavior< std::pair< A, B > > & pm
         )
     {
-        return pmMap( scpp::second<A,B>, pm );
+        return pmMap( scpp::PairUtil::second<A,B>, pm );
     }
 
 
@@ -401,7 +401,7 @@ namespace sfrp
         )
     {
         return pmLift
-            ( &scpp::make_pair< A, B >
+            ( &scpp::PairUtil::makePair< A, B >
             , a
             , b
             );

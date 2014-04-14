@@ -18,6 +18,7 @@ SOURCES += src/sboost_serializablestringutil.t.cpp
 SOURCES += src/sboost_tests.cpp
 SOURCES += src/scpp_operators.cpp
 SOURCES += src/scpp_pairutil.cpp
+SOURCES += src/scpp_pairutil.t.cpp
 SOURCES += src/scpp_setutil.cpp
 SOURCES += src/scpp_setutil.t.cpp
 SOURCES += src/scpp_tests.cpp

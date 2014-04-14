@@ -12,6 +12,8 @@
 /------------------
 : 'scpp_operators':
 :      Provide named versions of C++ operators.
+: 'scpp_pairutils':
+:      Provide utility operations for 'std::pair' objects.
 : 'scpp_setutil':
 :      Provide utility functions for 'std::set' objects.
 : 'scpp_vectorutil':
