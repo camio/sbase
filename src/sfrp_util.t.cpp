@@ -88,5 +88,12 @@ void utilTests(stest::TestCollector&col)
     p.second( 2 );
     BOOST_CHECK(b.pull(3.0) == std::make_pair(1, 2));
   });
+  col.addTest("sfrp_util_pmLift", []()->void {
+    const sfrp::Behavior<std::string> timeString =
+        sfrp::pmLift([](double d) { return std::to_string(d); },
+                     sfrp::pmTime());
+    BOOST_CHECK_EQUAL(*timeString.pull(0.0), "0");
+    BOOST_CHECK_EQUAL(*timeString.pull(1.0), "1");
+  });
 }
 }

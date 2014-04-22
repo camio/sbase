@@ -7,7 +7,6 @@
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread/mutex.hpp>
-#include <boost/utility/result_of.hpp>
 #include <sboost/optionalutil.hpp>
 #include <scpp/operators.hpp>
 #include <scpp/pairutil.hpp>
@@ -15,6 +14,7 @@
 #include <sfrp/behavior.hpp>
 #include <sfrp/wormhole.hpp>
 #include <smisc/unit.hpp>
+#include <type_traits>
 
 /* There are a few event functions that should be written for completeness's
  * sake. They are...
@@ -49,7 +49,7 @@ namespace sfrp
         struct pmMap
         {
             typedef typename PM_A::type A;
-            typedef typename boost::result_of< F_AB( A ) >::type B;
+            typedef typename std::result_of< F_AB( A ) >::type B;
             typedef Behavior<B> type;
         };
     };
@@ -101,7 +101,7 @@ namespace sfrp
         {
             typedef typename PM_A::type A;
             typedef typename PM_F_AB::type F_AB;
-            typedef typename boost::result_of< F_AB( A ) >::type B;
+            typedef typename std::result_of< F_AB( A ) >::type B;
             typedef Behavior<B> type;
         };
     };
@@ -1067,7 +1067,7 @@ namespace sfrp
             >
         struct pmEvApp
         {
-            typedef typename boost::result_of<F (A)>::type B;
+            typedef typename std::result_of<F (A)>::type B;
             typedef Behavior< boost::optional<B> > type;
 
         };
@@ -1080,7 +1080,7 @@ namespace sfrp
             >
         struct PmEvApp
         {
-            typedef typename boost::result_of<F (A)>::type B;
+            typedef typename std::result_of<F (A)>::type B;
             typedef B result_type;
             B operator()
                 ( const std::pair<F,A> p
