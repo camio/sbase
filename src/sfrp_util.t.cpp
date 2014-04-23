@@ -2,6 +2,7 @@
 
 #include <sfrp/util.hpp>
 #include <stest/testcollector.hpp>
+#include <string>
 
 namespace {
 class ReturnType {
@@ -90,7 +91,7 @@ void utilTests(stest::TestCollector&col)
   });
   col.addTest("sfrp_util_pmLift", []()->void {
     const sfrp::Behavior<std::string> timeString =
-        sfrp::pmLift([](double d) { return std::to_string(d); },
+        sfrp::pmLift([](double d) { return std::to_string(int(d)); },
                      sfrp::pmTime());
     BOOST_CHECK_EQUAL(*timeString.pull(0.0), "0");
     BOOST_CHECK_EQUAL(*timeString.pull(1.0), "1");
