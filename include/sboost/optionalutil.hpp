@@ -155,12 +155,10 @@ struct OptionalUtil {
   static auto bind(const boost::optional<A>& optionalValue, F function)
       -> decltype(function(*optionalValue));
 };
-}
 
 // ===========================================================================
 //                 INLINE DEFINITIONS
 // ===========================================================================
-namespace sboost {
 
 template <typename A>
 struct OptionalUtil_Join::result<OptionalUtil_Join(A)> {
