@@ -2,28 +2,50 @@
 #define SFRP_BEHAVIOR_HPP_
 
 #include <boost/function.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
+#include <sfrp/cachedincreasingpartialtimefunction.hpp>
 
 namespace sfrp {
 
-/** See "Interactive Move Semantics.txt" for a meaning
- */
-template <typename A>
+// This class implements a partial function from time to the specified 'Value'
+// type. The function is defined from time '0' to some end time greater than
+// '0'. Behaviors that are not defined at time '0', or any subsequent time, are
+// permitted.
+template <typename Value>
 struct Behavior {
-  typedef A type;
 
-  explicit Behavior(boost::function<boost::optional<A>(double)> valuePullFunc);
+  // The codomain of this partial time function.
+  typedef Value type;
 
-  // Create 'Behavior' object that has no value at any time.
+  // Create a 'Behavior' object that is not defined at any time.
   Behavior();
 
-  // Create 'Behavior' object equivelent to the specified 'behavior'.
-  Behavior( Behavior<A> && behavior );
+  // Create a 'Behavior' object equivelent to the specified 'behavior'.
+  Behavior(Behavior<Value>&& behavior);
 
-  boost::optional<A> pull(const double time) const;
+  // Return the value of this partial time function at the specified 'time' if
+  // it is defined, otherwise return 'boost::none'. If a previous call to
+  // 'pull()' returns 'boost::none', so will all subsequent calls.  The
+  // behavior is undefined unless 'pull()' is being called for the first time
+  // or the previous call to 'pull()' used a time argument that is less than
+  // 'time'. The behavior is also undefined unless 'time >= 0.0'.
+  //
+  // Note that the aformentioned preconditions imply that 'pull()' is called
+  // with increasing time arguments and that after 'pull()' returns
+  // 'boost::none', it will return 'boost::none' thereafter.
+  boost::optional<Value> pull(const double time) const;
+
+  // Create a new 'Behavior<Value>' object from the 'valuePullFunc' function.
+  // The behavior is undefined unless 'valuePullFunc' returns a value when it
+  // is called once and is defined with increasing argument values as long as
+  // the previous call didn't return 'boost::none'.
+  static Behavior<Value> fromValuePullFunc(
+      boost::function<boost::optional<Value>(double)> valuePullFunc);
 
  private:
-  boost::function<boost::optional<A>(double)> m_valuePullFunc;
+  mutable boost::shared_ptr<CachedIncreasingPartialTimeFunction<Value>> m_timeFunction;
 };
 
 // ===========================================================================
@@ -31,22 +53,31 @@ struct Behavior {
 // ===========================================================================
 
 template <typename A>
-Behavior<A>::Behavior(boost::function<boost::optional<A>(double)> valuePullFunc)
-    : m_valuePullFunc(std::move(valuePullFunc)) {}
+Behavior<A> Behavior<A>::fromValuePullFunc(
+    boost::function<boost::optional<A>(double)> valuePullFunc) {
+  Behavior<A> result;
+  result.m_timeFunction =
+      boost::make_shared<CachedIncreasingPartialTimeFunction<A>>(std::move(valuePullFunc));
+  return result;
+}
 
 template <typename A>
 Behavior<A>::Behavior()
-    : m_valuePullFunc([](double)->boost::optional<A>{
-  return boost::none;
-}) {}
+    : m_timeFunction() {}
 
 template <typename A>
 boost::optional<A> Behavior<A>::pull(const double time) const {
-  return m_valuePullFunc(time);
+  if (m_timeFunction) {
+    boost::optional<A> result = m_timeFunction->pull(time);
+    if (!result)
+      m_timeFunction.reset();
+    return result;
+  } else
+    return boost::none;
 }
 
 template <typename A>
 Behavior<A>::Behavior(Behavior<A>&& behavior)
-    : m_valuePullFunc(std::move(behavior.m_valuePullFunc)) {}
+    : m_timeFunction(std::move(behavior.m_timeFunction)) {}
 }
 #endif

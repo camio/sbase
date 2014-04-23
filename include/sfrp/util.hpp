@@ -89,7 +89,7 @@ namespace sfrp
     pmMap( F_AB f, PM_A pma )
     {
         typedef typename result_of::pmMap< F_AB, PM_A >::type PM_B;
-        return PM_B( detail::PmMap< F_AB, PM_A >( f, pma ) );
+        return PM_B::fromValuePullFunc( detail::PmMap< F_AB, PM_A >( f, pma ) );
     }
 
     namespace result_of
@@ -147,7 +147,7 @@ namespace sfrp
     pmApp( const PM_F_AB & pm0, const PM_A & pm1 )
     {
         typedef typename result_of::pmApp< PM_F_AB, PM_A >::type PM_B;
-        return PM_B
+        return PM_B::fromValuePullFunc
             ( detail::PmApp
                 < PM_F_AB
                 , PM_A
@@ -197,7 +197,7 @@ namespace sfrp
     template<typename T>
     Behavior<T> pmConst( const T & t )
     {
-        return Behavior<T>( detail::PmConst<T>( t ) );
+        return Behavior<T>::fromValuePullFunc( detail::PmConst<T>( t ) );
     }
 
     namespace detail
@@ -236,7 +236,7 @@ namespace sfrp
         , const Behavior<T> & pm
         )
     {
-        return Behavior<T>( detail::PmWatch<T>( f, pm ) );
+        return Behavior<T>::fromValuePullFunc( detail::PmWatch<T>( f, pm ) );
     }
     namespace detail
     {
@@ -434,7 +434,7 @@ namespace sfrp
      */
     inline Behavior< double > pmTime( )
     {
-        return Behavior< double >( detail::PmTime( ) );
+        return Behavior< double >::fromValuePullFunc( detail::PmTime( ) );
     }
 
     template< typename T >
@@ -587,7 +587,7 @@ namespace sfrp
         const boost::shared_ptr<detail::PmJoin<A> > pmPtr
             = boost::make_shared<detail::PmJoin<A> >( pm );
         
-        return sfrp::Behavior<boost::optional< A > >
+        return sfrp::Behavior<boost::optional< A > >::fromValuePullFunc
             ( boost::bind
              ( &detail::PmJoin<A>::pullVal
              , pmPtr
@@ -669,7 +669,7 @@ namespace sfrp
     {
         const auto fPtr = boost::make_shared<detail::PmTrigger<T> >( );
         return std::make_pair
-            ( Behavior<boost::optional< T > >
+            ( Behavior<boost::optional< T > >::fromValuePullFunc
              ( boost::bind
               ( &detail::PmTrigger<T>::pullVal
               , fPtr
@@ -864,59 +864,6 @@ namespace sfrp
     namespace detail
     {
         template< typename A >
-        struct PmSplittable
-        {
-            typedef boost::optional
-                  < std::pair
-                    < double
-                    , boost::optional
-                       < A >
-                    >
-                  > Data;
-            typedef boost::shared_ptr< Data > DataPtr;
-            PmSplittable
-                ( const Behavior<A> & pm_
-                )
-                : pm( pm_ )
-                , dataPtr( boost::make_shared<Data>( Data() ) )
-            {
-            }
-
-            boost::optional<A> operator()
-                ( const double time
-                ) const
-            {
-                Data & data = *dataPtr;
-                if( data && time == data->first )
-                {
-                    //cached
-                    return data->second;
-                }
-                else
-                {
-                    auto opA = pm.pull( time );
-                    data = boost::make_optional
-                        ( std::make_pair
-                         ( time
-                         , opA
-                         )
-                        );
-                    return opA;
-                }
-            }
-            Behavior<A> pm;
-            DataPtr dataPtr;
-        };
-    }
-    template< typename A >
-    Behavior<A> pmSplittable( const Behavior<A> & a )
-    {
-        return Behavior<A>( detail::PmSplittable<A>( a ) );
-    }
-
-    namespace detail
-    {
-        template< typename A >
         struct PmDelay
         {
             PmDelay
@@ -955,7 +902,7 @@ namespace sfrp
     template< typename A >
     Behavior<A> pmDelay( const A & a, const Behavior<A> & pm )
     {
-        return Behavior<A>( detail::PmDelay<A>( a, pm ) );
+        return Behavior<A>::fromValuePullFunc( detail::PmDelay<A>( a, pm ) );
     }
 
     Behavior<bool> pmNot( const Behavior<bool> & p );

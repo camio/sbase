@@ -130,7 +130,8 @@ template <typename T>
 Wormhole<T>::Wormhole(const T& value)
     : m_data(boost::make_shared<std::pair<bool, boost::optional<T>>>(false,
                                                                      value)),
-      m_outputBehavior(Behavior<T>(Wormhole_BehaviorFunction<T>(m_data))) {}
+      m_outputBehavior(Behavior<T>::fromValuePullFunc(
+          Wormhole_BehaviorFunction<T>(m_data))) {}
 
 template <typename T>
 struct Wormhole_ClosedBehaviorFunction {
@@ -148,7 +149,7 @@ struct Wormhole_ClosedBehaviorFunction {
 template <typename T>
 Behavior<T> Wormhole<T>::setInputBehavior(const Behavior<T>& pm) const {
   m_data->first = true;
-  return Behavior<T>(Wormhole_ClosedBehaviorFunction<T>(*this, pm));
+  return Behavior<T>::fromValuePullFunc(Wormhole_ClosedBehaviorFunction<T>(*this, pm));
 }
 }
 #endif
