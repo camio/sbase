@@ -9,6 +9,8 @@
 
 /Component Synopsis
 /------------------
+: 'sfrp_behavior':
+:      Provide a time/value function representation for FRP.
 : 'sfrp_cachedincreasingpartialtimefunction':
 :      Provide a partial time function class that allows same-time pulls.
 : 'sfrp_cachedpull':
