@@ -14,7 +14,7 @@
 // Circular graphs are required, for instance, when one needs the previous
 // state of the graph to be remembered. Consider how one would implement a
 // 'withPrev' function that returns a behavior equivelent to its input
-// behavior, except it pairs the value at every step  with the previously
+// behavior, except it pairs the value at every step with the previously
 // pulled value.
 //
 // Usage
@@ -63,6 +63,8 @@
 
 namespace sfrp {
 
+// This class provides a utility that enables one to create circular
+// dependencies between behaviors.
 template <typename T>
 struct Wormhole {
   typedef T type;
