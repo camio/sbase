@@ -272,15 +272,15 @@ namespace sfrp
     // This is intended to eventually be a series of functions that
     // lift functions of any arity.
     template <typename Func, typename Arg0Beh>
-    auto pmLift(Func func, Arg0Beh arg0Beh)
-        -> Behavior<decltype(func(*(typename Arg0Beh::type*)(0)))> {
+    Behavior<typename std::result_of<Func(typename Arg0Beh::type)>::type>
+    pmLift(Func func, Arg0Beh arg0Beh) {
       return pmMap(func, arg0Beh);
     }
 
     template <typename Func, typename Arg0Beh, typename Arg1Beh>
-    auto pmLift(Func func, Arg0Beh arg0Beh, Arg1Beh arg1Beh)
-        -> Behavior<decltype(func(*(typename Arg0Beh::type*)(0),
-                                  *(typename Arg1Beh::type*)(0)))> {
+    Behavior<typename std::result_of<
+        Func(typename Arg0Beh::type, typename Arg1Beh::type)>::type>
+    pmLift(Func func, Arg0Beh arg0Beh, Arg1Beh arg1Beh) {
       return pmApp(pmMap(sfp::cf(func), arg0Beh), arg1Beh);
     }
 
