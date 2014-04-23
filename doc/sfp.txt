@@ -17,3 +17,7 @@
 :      Provide routines to curry IO functions.
 : 'sfp_ciofunc':
 :      Provide metafunction for generating curried IO Boost.Function types.
+: 'sfp_flipped':
+:      Provide a two-argument function wrapper that flips its arguments.
+: 'sfp_fliputil':
+:      Provide utilities for argument flipping of two argument functions.
