@@ -181,6 +181,160 @@
 // When b is defined elsewhere, 'Behavior<A> m = n' implies that 'm' and 'n'
 // refer to the same reference. Implementation wise, we handle this by use of a
 // shared pointer.
+//
+// Usage
+// -----
+// This section illustrates intended use of this component.
+//
+// Example 1: Always time function
+// - - - - - - - - - - - - - - - -
+// In this example, we illustrate how to use the 'fromValuePullFunc' function
+// to construct behaviors with the sematics we desire.
+//
+// First, we create a behavior that has the value '3' for all times. Because
+// this behavior never ends, we construct our function to always return
+// 'make_optional(3)'. The time argument is ignored.
+//..
+//  sfrp::Behavior<int> alwaysThree = sfrp::Behavior<int>::fromValuePullFunc([](
+//      double time) { return boost::make_optional(3); });
+//..
+// Even though the 'fromValuePullFunc' gives some precise explainations of how
+// its argument will be used, it is no harm to have values defined for
+// arguments of our function that won't be used (for example, at time '-1.0').
+//
+// If we want to extend this to a general purpose 'always' function, we can do
+// so by making a function template.
+//..
+//  template <typename Value>
+//  sfrp::Behavior<Value> always(const Value& value) {
+//    return sfrp::Behavior<Value>::fromValuePullFunc([value](double time) {
+//      return boost::make_optional(value);
+//    });
+//  }
+//..
+// Here we keep hold of the value in the lambda that is formed. We can use this
+// 'always' function now to simplify our alwaysThree function.
+//..
+//  sfrp::Behavior<int> alwaysThree = always( 3 );
+//..
+// Generally speaking, FRP graphs are constructed using higher level functions
+// like 'always' instead of the lower-level 'fromValuePullFunc'.
+//
+// The 'always' function is defined for general use in sfrp_behaviorutil.
+//
+// Example 2: Composition
+// - - - - - - - - - - - 
+// One of the most powerful features of FRP is the ability to compose simple
+// behaviors into more complex ones. Here we define a '+' operator that can be
+// used to add behaviors together.
+//
+// The key idea here is to use the 'pull' function inside the implementation of
+// the argument to 'fromValuePullFunc'. Checking the result ensures that the
+// '+' of behaviors is only defined when the two arguments are defined.
+//..
+//  sfrp::Behavior<int> operator+( sfrp::Behavior<int> lhs,
+//                                 sfrp::Behavior<int> rhs ) {
+//    return sfrp::Behavior<int>::fromValuePullFunc([lhs, rhs](double time)
+//                                                      ->boost::optional<int> {
+//      boost::optional<int> lhsVal = lhs.pull(time);
+//      boost::optional<int> rhsVal = rhs.pull(time);
+//      if (lhsVal && rhsVal)
+//        return boost::make_optional(*lhsVal + *rhsVal);
+//      else
+//        return boost::none;
+//    });
+//  }
+//..
+// The use of 'fromValuePullFunc' and 'pull' here are too low level for
+// most composition operations including this one. See the 'lift()' functions
+// available in behavior_util for better ways to accomplish this task.
+//
+// Example 3: Mouse position behavior
+// - - - - - - - - - - - - - - - - -
+// Interaction, such as having the ability to construct a behavior that
+// represents the mouse position, is an important use case for functional
+// reactive programming. In this example we see how we would create such a
+// behavior.
+//
+// First, assume we have a global function that returns the current mouse
+// position.
+//..
+//  std::pair<int, int> getMousePos();
+//..
+// We construct our behavior by directly using this global variable.
+//..
+//  sfrp::Behavior<std::pair<int, int>> mousePos =
+//      sfrp::Behavior<std::pair<int, int>>::fromValuePullFunc([](double time) {
+//        return boost::make_optional(getMousePos());
+//      });
+//..
+// Of course, we need to discuss what time means in this case. This definition
+// of 'mousePos' has built in it the expectation that 'time' will always
+// correspond to the current time on a computer.
+//
+// Although this is safe to assume in most cases, it may be necessary to allow
+// for the pulling of the mouse position at times prior to the present.
+//
+// To accomplish this a "push-pull" mechanism must be put into place.
+//
+// We first construct and initialize a queue of mouse position values. This
+// will be the buffer between the execution which polls the mouse position and
+// the execution which pulls out values.
+//
+// It is important that we initialize it with a value in case the 'pull' comes
+// before our filler execution first adds a value.
+//..
+//  boost::shared_ptr<
+//      std::list<sfrp::CachedPull<std::pair<int, int>>>> mousePosQueue =
+//      boost::make_shared<std::list<sfrp::CachedPull<std::pair<int, int>>>>();
+//  // Intialize the queue
+//  mousePosQueue->emplace_front(
+//      sfrp::CachedPull<std::pair<int, int>>(currentTime(), getMousePos()));
+//..
+//  Our 'push' execution will repeately add a mouse position value to the queue.
+//..
+//  mousePosQueue->emplace_front(
+//      sfrp::CachedPull<std::pair<int, int>>(currentTime(), getMousePos()));
+//..
+//  The definition of the mouse position behavior is as follows. As a value is
+//  requested, the queue is cleared of unneeded values.
+//..
+//  sfrp::Behavior<std::pair<int, int>> mousePos =
+//      sfrp::Behavior<std::pair<int, int>>::fromValuePullFunc([mousePosQueue](
+//          double time) {
+//        // Look in our queue for the first entry with a time less than 'time'.
+//        auto iterator =
+//            std::find_if(mousePosQueue->begin(),
+//                         mousePosQueue->end(),
+//                         [time](sfrp::CachedPull<std::pair<int, int>> val) {
+//              return val.time() <= time;
+//            });
+//
+//        // We've requested a time before our initial value. This indicates a
+//        // programming error.
+//        assert(iterator != mousePosQueue->end());
+//
+//        // Clear the cache we don't need. We can do this because we know all
+//        // future calls will have an argument greater than 'time'.
+//        if (std::next(iterator) != mousePosQueue->end())
+//          mousePosQueue->erase(std::next(iterator), mousePosQueue->end());
+//
+//        return boost::make_optional(iterator->value());
+//      });
+//..
+// One thing to keep in mind with this push-pull strategy is that the pull
+// code is racing against the pull code to keep the buffer from exploding in
+// size. One might desire to remedy this possible memory explosion by ensuring
+// that the buffer never grows beyond a certain size at the expense of
+// resolution.
+//
+// Both the pull method and the push-pull method are correct semantically
+// speaking. The way the time functions are defined is the only thing that
+// changes. The intuitive concept of mouse position as related to time,
+// however, is more accurately modeled by the push-pull mechanism.
+//
+// Example 4: Retrieving Values
+// - - - - - - - - - - - - - -
 
 #include <boost/function.hpp>
 #include <boost/make_shared.hpp>
