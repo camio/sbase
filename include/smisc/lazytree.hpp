@@ -3,6 +3,7 @@
 
 #include <boost/variant.hpp>
 #include <smisc/lazylist.hpp>
+#include <type_traits>  // std::result_of
 
 /** \file smisc/lazytree.hpp
  * This file contains an implementation of a rose tree that has different
@@ -222,9 +223,9 @@ namespace smisc
 
     template< typename F, typename G, typename BranchData, typename LeafData >
     auto lnsMap( F f, G g, const LazyList< LtNode<BranchData, LeafData > > & lns )
-        -> LtNodes
-             < decltype( f( *(BranchData*)(0) ) )
-             , decltype( g( *(LeafData*)(0) ) )
+        -> typename LtNodes
+             < typename std::result_of<F(BranchData)>::type
+             , typename std::result_of<G(LeafData)>::type
              >::type
     {
         return llMap
