@@ -26,8 +26,7 @@ struct AnySerializer;
 // 'boost::text_iarchive' with the exception that an 'AnySerializer' reference
 // is also provided.
 struct TextIArchiveWithAnySerializer
-    : boost::archive::text_iarchive_impl<TextIArchiveWithAnySerializer>,
-      boost::archive::detail::shared_ptr_helper {
+    : boost::archive::text_iarchive_impl<TextIArchiveWithAnySerializer> {
 
   // Create a 'TextIArchiveWithAnySerializer' object with the specified
   // 'anySerializer' that will input from the specified 'inStream' using the
