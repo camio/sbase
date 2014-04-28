@@ -12,6 +12,7 @@
 
 #include <boost/fusion/include/at_c.hpp>
 #include <boost/fusion/include/value_at.hpp>
+#include <type_traits>  // std::remove_const, std::remove_reference
 
 namespace sboost {
 
@@ -25,13 +26,16 @@ struct FusionAtC {
   struct result;
 
   template <typename S>
-  struct result<this_type(const S)> {
-    typedef typename boost::fusion::result_of::value_at_c<S, N>::type type;
+  struct result<this_type(S)> {
+    typedef typename boost::fusion::result_of::value_at_c<
+        typename std::remove_reference<
+            typename std::remove_const<S>::type>::type,
+        N>::type type;
   };
 
   // Return the N-th element from the beginning of a fusion sequence.
   template <typename S>
-  typename result<this_type(const S)>::type operator()(const S& s) const {
+  typename result<this_type(S)>::type operator()(const S& s) const {
     return boost::fusion::at_c<N>(s);
   }
 };
