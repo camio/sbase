@@ -11,11 +11,17 @@
 /------------------
 : 'sfrp_behavior':
 :      Provide a time/value function representation for FRP.
+: 'sfrp_behaviormap':
+:      Provide a means to apply a plain function to behavior objects.
+: 'sfrp_behaviorpuller':
+:      Provide a functor that pulls behaviors at a particular time.
 : 'sfrp_cachedincreasingpartialtimefunction':
 :      Provide a partial time function class that allows same-time pulls.
 : 'sfrp_cachedpull':
 :      Provide a time/value pair for use in caching time functions.
 : 'sfrp_increasingpartialtimefunction':
 :      Provide a partial time function class that releases resources.
+: 'sfrp_mapvaluepullfunc':
+:      Provide functor that pulls behaviors and applies a function to them.
 : 'sfrp_wormhole':
 :      Provide a means to create circular dependencies in FRP graphs.
