@@ -4,9 +4,10 @@
 //@PURPOSE: Provide utility operations for Boost.Optional objects.
 //
 //@CLASSES:
-//  sboost::OptionalUtil_Join: optional 'join' template functor
-//  sboost::OptionalUtil_HasValue: optional 'hasValue' template functor
+//  sboost::OptionalUtil_GetValue: optional 'getValue' template functor
 //  sboost::OptionalUtil_GetValueOr: optional 'getValueOr' template functor
+//  sboost::OptionalUtil_HasValue: optional 'hasValue' template functor
+//  sboost::OptionalUtil_Join: optional 'join' template functor
 //  sboost::OptionalUtil_MapResult: 'map' result type computation
 //  sboost::OptionalUtil: Boost.Optional utility operation namespace
 //
@@ -70,30 +71,18 @@
 
 namespace sboost {
 
-// This class provides a template functor implementation of the 'join()'
+// This class provides a template functor implementation of the 'getValue()'
 // function.
-struct OptionalUtil_Join {
+struct OptionalUtil_GetValue {
   // Return the result type of applying this functor with the specified
   // 'FunctorApplicationExpression'.
   template <typename FunctorApplicationExpression>
   struct result;
 
-  // Return the value contained in the specified 'optionalOptionalValue' if it
-  // is not none, otherwise return 'boost::none'.
+  // Return the value of the specified 'optionalValue'. The behavior is
+  // undefined unless 'optionalValue != boost::none'.
   template <typename A>
-  boost::optional<A> operator()(
-      const boost::optional<boost::optional<A>>& optionalOptionalValue) const;
-};
-
-// This class provides a template functor implementation of the 'hasValue()'
-// function.
-struct OptionalUtil_HasValue {
-  typedef bool result_type;
-
-  // Return 'true' if the specified 'optionalValue' is not none, otherwise
-  // return 'false'.
-  template <typename T>
-  inline bool operator()(const boost::optional<T>& optionalValue) const;
+  A operator()(const boost::optional<A>& optionalValue) const;
 };
 
 // This class provides a template functor implementation of the 'getValueOr()'
@@ -109,6 +98,32 @@ struct OptionalUtil_GetValueOr {
   template <typename A>
   A operator()(const boost::optional<A>& optionalValue,
                const A& defaultValue) const;
+};
+
+// This class provides a template functor implementation of the 'hasValue()'
+// function.
+struct OptionalUtil_HasValue {
+  typedef bool result_type;
+
+  // Return 'true' if the specified 'optionalValue' is not none, otherwise
+  // return 'false'.
+  template <typename T>
+  inline bool operator()(const boost::optional<T>& optionalValue) const;
+};
+
+// This class provides a template functor implementation of the 'join()'
+// function.
+struct OptionalUtil_Join {
+  // Return the result type of applying this functor with the specified
+  // 'FunctorApplicationExpression'.
+  template <typename FunctorApplicationExpression>
+  struct result;
+
+  // Return the value contained in the specified 'optionalOptionalValue' if it
+  // is not none, otherwise return 'boost::none'.
+  template <typename A>
+  boost::optional<A> operator()(
+      const boost::optional<boost::optional<A>>& optionalOptionalValue) const;
 };
 
 // Return the type of the result of the 'map' function assuming the
@@ -130,6 +145,11 @@ struct OptionalUtil {
   template <typename A>
   static boost::optional<A> alternative(const boost::optional<A>& primary,
                                         const boost::optional<A>& secondary);
+
+  // Return the value of the specified 'optionalValue'. The behavior is
+  // undefined unless 'optionalValue != boost::none'.
+  template <typename A>
+  static A getValue(const boost::optional<A>& optionalValue);
 
   // Return the value of the specified 'optionalValue' if it has one, otherwise
   // return the specified 'defaultValue'.
@@ -159,6 +179,16 @@ struct OptionalUtil {
 // ===========================================================================
 //                 INLINE DEFINITIONS
 // ===========================================================================
+
+template <typename A, typename B>
+struct OptionalUtil_GetValue::result<OptionalUtil_GetValue(A, B)> {
+  typedef typename A::value_type type;
+};
+
+template <typename A>
+A OptionalUtil_GetValue::operator()(const boost::optional<A>& optionalValue) const {
+  return *optionalValue;
+}
 
 template <typename A>
 struct OptionalUtil_Join::result<OptionalUtil_Join(A)> {
@@ -198,6 +228,11 @@ template <typename A>
 boost::optional<A> OptionalUtil::alternative(const boost::optional<A>& a,
                                              const boost::optional<A>& b) {
   return a ? a : b;
+}
+
+template <typename A>
+A OptionalUtil::getValue(const boost::optional<A>& optionalValue) {
+  return *optionalValue;
 }
 
 template <typename A>

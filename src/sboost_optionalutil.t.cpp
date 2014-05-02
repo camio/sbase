@@ -46,6 +46,10 @@ void optionalutilTests(stest::TestCollector& col) {
                                           boost::make_optional(4)) ==
                 boost::make_optional(4));
   });
+  col.addTest("sboost_optionalutil_GetValue", []()->void {
+    BOOST_CHECK_EQUAL(OptionalUtil_GetValue()(boost::make_optional(3)), 3);
+    BOOST_CHECK_EQUAL(OptionalUtil::getValue(boost::make_optional(3)), 3);
+  });
   col.addTest("sboost_optionalutil_GetValueOr", []()->void {
     BOOST_CHECK_EQUAL(OptionalUtil_GetValueOr()(boost::make_optional(3), 6), 3);
     BOOST_CHECK_EQUAL(OptionalUtil_GetValueOr()(boost::optional<int>(), 6), 6);
