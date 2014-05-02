@@ -2,6 +2,7 @@
 
 #include <sfrp/util.hpp>
 #include <stest/testcollector.hpp>
+#include <string>
 
 namespace {
 class ReturnType {
@@ -87,6 +88,13 @@ void utilTests(stest::TestCollector&col)
     BOOST_CHECK(b.pull(2.0) == std::make_pair(0, 1));
     p.second( 2 );
     BOOST_CHECK(b.pull(3.0) == std::make_pair(1, 2));
+  });
+  col.addTest("sfrp_util_pmLift", []()->void {
+    const sfrp::Behavior<std::string> timeString =
+        sfrp::pmLift([](double d) { return std::to_string(int(d)); },
+                     sfrp::pmTime());
+    BOOST_CHECK_EQUAL(*timeString.pull(0.0), "0");
+    BOOST_CHECK_EQUAL(*timeString.pull(1.0), "1");
   });
 }
 }

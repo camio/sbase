@@ -1,10 +1,14 @@
 #include <sboost/tests.hpp>
 
-#include <sboost/fusionfoldr.t.hpp>
+#include <sboost/fusionfoldutil.t.hpp>
+#include <sboost/optionalutil.t.hpp>
+#include <sboost/serializablestringutil.t.hpp>
 
 namespace sboost {
 void tests(stest::TestCollector& col) {
-  fusionfoldrTests(col);
+  fusionfoldutilTests(col);
+  optionalutilTests(col);
+  serializablestringutilTests(col);
 }
 }
 

@@ -1,6 +1,37 @@
 #ifndef SFP_CIOFUNC_HPP_
 #define SFP_CIOFUNC_HPP_
 
+//@PURPOSE: Provide metafunction for generating curried IO Boost.Function types.
+//
+//@CLASSES:
+//  sfp::ciofunc: curried IO Boost.Function generating metafunction
+//
+//@DESCRIPTION: This component provides a single class, 'ciofunc', which based on
+// its template argments, will produce a curried IO Boost.Function type.
+//
+// By creating IO type it is meant that the final return value will be a
+// zero-argument function, otherwise called a computation.
+//
+// Usage
+// -----
+// This section illustrates intended use of this component.
+//
+// Example 1: Generation of Boost.Function types
+// - - - - - - - - - - - - - - - - - - - - - - -
+// Each template argument to 'ciofunc' corresponds to a parameter of the function
+// with the final argument representing a computation of the result type.
+//
+// For example, the following invocation of 'ciofunc',
+//..
+//  sfp::cfunc<char,int,long>::type
+//..
+// evaluates to
+//..
+//  boost::function< boost::function< boost::function<long()> (int)>
+//                   (char)
+//                 >
+//..
+
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/comparison/greater.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>

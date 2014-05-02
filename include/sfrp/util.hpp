@@ -7,14 +7,14 @@
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread/mutex.hpp>
-#include <boost/utility/result_of.hpp>
-#include <sboost/optional.hpp>
+#include <sboost/optionalutil.hpp>
 #include <scpp/operators.hpp>
-#include <scpp/utility.hpp>
+#include <scpp/pairutil.hpp>
 #include <sfp/cf.hpp>
 #include <sfrp/behavior.hpp>
 #include <sfrp/wormhole.hpp>
 #include <smisc/unit.hpp>
+#include <type_traits>
 
 /* There are a few event functions that should be written for completeness's
  * sake. They are...
@@ -49,7 +49,7 @@ namespace sfrp
         struct pmMap
         {
             typedef typename PM_A::type A;
-            typedef typename boost::result_of< F_AB( A ) >::type B;
+            typedef typename std::result_of< F_AB( A ) >::type B;
             typedef Behavior<B> type;
         };
     };
@@ -89,7 +89,7 @@ namespace sfrp
     pmMap( F_AB f, PM_A pma )
     {
         typedef typename result_of::pmMap< F_AB, PM_A >::type PM_B;
-        return PM_B( detail::PmMap< F_AB, PM_A >( f, pma ) );
+        return PM_B::fromValuePullFunc( detail::PmMap< F_AB, PM_A >( f, pma ) );
     }
 
     namespace result_of
@@ -101,7 +101,7 @@ namespace sfrp
         {
             typedef typename PM_A::type A;
             typedef typename PM_F_AB::type F_AB;
-            typedef typename boost::result_of< F_AB( A ) >::type B;
+            typedef typename std::result_of< F_AB( A ) >::type B;
             typedef Behavior<B> type;
         };
     };
@@ -147,7 +147,7 @@ namespace sfrp
     pmApp( const PM_F_AB & pm0, const PM_A & pm1 )
     {
         typedef typename result_of::pmApp< PM_F_AB, PM_A >::type PM_B;
-        return PM_B
+        return PM_B::fromValuePullFunc
             ( detail::PmApp
                 < PM_F_AB
                 , PM_A
@@ -163,14 +163,14 @@ namespace sfrp
         ( const Behavior< std::pair< A, B > > & pm
         )
     {
-        return pmMap( scpp::first<A,B>, pm );
+        return pmMap( scpp::PairUtil::first<A,B>, pm );
     }
     template< typename A, typename B >
     Behavior<B> pmSecond
         ( const Behavior< std::pair< A, B > > & pm
         )
     {
-        return pmMap( scpp::second<A,B>, pm );
+        return pmMap( scpp::PairUtil::second<A,B>, pm );
     }
 
 
@@ -197,7 +197,7 @@ namespace sfrp
     template<typename T>
     Behavior<T> pmConst( const T & t )
     {
-        return Behavior<T>( detail::PmConst<T>( t ) );
+        return Behavior<T>::fromValuePullFunc( detail::PmConst<T>( t ) );
     }
 
     namespace detail
@@ -236,7 +236,7 @@ namespace sfrp
         , const Behavior<T> & pm
         )
     {
-        return Behavior<T>( detail::PmWatch<T>( f, pm ) );
+        return Behavior<T>::fromValuePullFunc( detail::PmWatch<T>( f, pm ) );
     }
     namespace detail
     {
@@ -272,15 +272,15 @@ namespace sfrp
     // This is intended to eventually be a series of functions that
     // lift functions of any arity.
     template <typename Func, typename Arg0Beh>
-    auto pmLift(Func func, Arg0Beh arg0Beh)
-        -> Behavior<decltype(func(*(typename Arg0Beh::type*)(0)))> {
+    Behavior<typename std::result_of<Func(typename Arg0Beh::type)>::type>
+    pmLift(Func func, Arg0Beh arg0Beh) {
       return pmMap(func, arg0Beh);
     }
 
     template <typename Func, typename Arg0Beh, typename Arg1Beh>
-    auto pmLift(Func func, Arg0Beh arg0Beh, Arg1Beh arg1Beh)
-        -> Behavior<decltype(func(*(typename Arg0Beh::type*)(0),
-                                  *(typename Arg1Beh::type*)(0)))> {
+    Behavior<typename std::result_of<
+        Func(typename Arg0Beh::type, typename Arg1Beh::type)>::type>
+    pmLift(Func func, Arg0Beh arg0Beh, Arg1Beh arg1Beh) {
       return pmApp(pmMap(sfp::cf(func), arg0Beh), arg1Beh);
     }
 
@@ -401,7 +401,7 @@ namespace sfrp
         )
     {
         return pmLift
-            ( &scpp::make_pair< A, B >
+            ( &scpp::PairUtil::makePair< A, B >
             , a
             , b
             );
@@ -434,7 +434,7 @@ namespace sfrp
      */
     inline Behavior< double > pmTime( )
     {
-        return Behavior< double >( detail::PmTime( ) );
+        return Behavior< double >::fromValuePullFunc( detail::PmTime( ) );
     }
 
     template< typename T >
@@ -587,7 +587,7 @@ namespace sfrp
         const boost::shared_ptr<detail::PmJoin<A> > pmPtr
             = boost::make_shared<detail::PmJoin<A> >( pm );
         
-        return sfrp::Behavior<boost::optional< A > >
+        return sfrp::Behavior<boost::optional< A > >::fromValuePullFunc
             ( boost::bind
              ( &detail::PmJoin<A>::pullVal
              , pmPtr
@@ -669,7 +669,7 @@ namespace sfrp
     {
         const auto fPtr = boost::make_shared<detail::PmTrigger<T> >( );
         return std::make_pair
-            ( Behavior<boost::optional< T > >
+            ( Behavior<boost::optional< T > >::fromValuePullFunc
              ( boost::bind
               ( &detail::PmTrigger<T>::pullVal
               , fPtr
@@ -770,7 +770,7 @@ namespace sfrp
         , const Behavior< boost::optional<A> > & b
         )
     {
-        return pmLift( sboost::opAlt<A>, a, b );
+        return pmLift( sboost::OptionalUtil::alternative<A>, a, b );
     }
     namespace detail
     {
@@ -864,59 +864,6 @@ namespace sfrp
     namespace detail
     {
         template< typename A >
-        struct PmSplittable
-        {
-            typedef boost::optional
-                  < std::pair
-                    < double
-                    , boost::optional
-                       < A >
-                    >
-                  > Data;
-            typedef boost::shared_ptr< Data > DataPtr;
-            PmSplittable
-                ( const Behavior<A> & pm_
-                )
-                : pm( pm_ )
-                , dataPtr( boost::make_shared<Data>( Data() ) )
-            {
-            }
-
-            boost::optional<A> operator()
-                ( const double time
-                ) const
-            {
-                Data & data = *dataPtr;
-                if( data && time == data->first )
-                {
-                    //cached
-                    return data->second;
-                }
-                else
-                {
-                    auto opA = pm.pull( time );
-                    data = boost::make_optional
-                        ( std::make_pair
-                         ( time
-                         , opA
-                         )
-                        );
-                    return opA;
-                }
-            }
-            Behavior<A> pm;
-            DataPtr dataPtr;
-        };
-    }
-    template< typename A >
-    Behavior<A> pmSplittable( const Behavior<A> & a )
-    {
-        return Behavior<A>( detail::PmSplittable<A>( a ) );
-    }
-
-    namespace detail
-    {
-        template< typename A >
         struct PmDelay
         {
             PmDelay
@@ -955,7 +902,7 @@ namespace sfrp
     template< typename A >
     Behavior<A> pmDelay( const A & a, const Behavior<A> & pm )
     {
-        return Behavior<A>( detail::PmDelay<A>( a, pm ) );
+        return Behavior<A>::fromValuePullFunc( detail::PmDelay<A>( a, pm ) );
     }
 
     Behavior<bool> pmNot( const Behavior<bool> & p );
@@ -1015,7 +962,7 @@ namespace sfrp
         {
             typedef typename Ev::type OpT;
             typedef typename OpT::value_type T;
-            typedef typename sboost::result_of::opMap<F,T>::type OpU;
+            typedef typename sboost::OptionalUtil_MapResult<F,T>::type OpU;
             typedef Behavior< OpU > type;
         };
     }
@@ -1028,7 +975,7 @@ namespace sfrp
         typedef typename Ev::type OpA;
         typedef typename OpA::value_type A;
         return pmMap
-            ( sfp::cf( &sboost::opMap<F,A> )( f )
+            ( sfp::cf( &sboost::OptionalUtil::map<F,A> )( f )
             , ev
             );
     }
@@ -1048,7 +995,7 @@ namespace sfrp
            > & pm
         )
     {
-        return pmMap( sboost::opJoin, pm );
+        return pmMap( sboost::OptionalUtil_Join(), pm );
     }
 
     template< typename A >
@@ -1067,7 +1014,7 @@ namespace sfrp
             >
         struct pmEvApp
         {
-            typedef typename boost::result_of<F (A)>::type B;
+            typedef typename std::result_of<F (A)>::type B;
             typedef Behavior< boost::optional<B> > type;
 
         };
@@ -1080,7 +1027,7 @@ namespace sfrp
             >
         struct PmEvApp
         {
-            typedef typename boost::result_of<F (A)>::type B;
+            typedef typename std::result_of<F (A)>::type B;
             typedef B result_type;
             B operator()
                 ( const std::pair<F,A> p

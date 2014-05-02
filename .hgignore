@@ -1,1 +1,3 @@
+syntax: glob
 build
+vim.vim

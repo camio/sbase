@@ -14,7 +14,7 @@
 // Circular graphs are required, for instance, when one needs the previous
 // state of the graph to be remembered. Consider how one would implement a
 // 'withPrev' function that returns a behavior equivelent to its input
-// behavior, except it pairs the value at every step  with the previously
+// behavior, except it pairs the value at every step with the previously
 // pulled value.
 //
 // Usage
@@ -63,6 +63,8 @@
 
 namespace sfrp {
 
+// This class provides a utility that enables one to create circular
+// dependencies between behaviors.
 template <typename T>
 struct Wormhole {
   typedef T type;
@@ -128,7 +130,8 @@ template <typename T>
 Wormhole<T>::Wormhole(const T& value)
     : m_data(boost::make_shared<std::pair<bool, boost::optional<T>>>(false,
                                                                      value)),
-      m_outputBehavior(Behavior<T>(Wormhole_BehaviorFunction<T>(m_data))) {}
+      m_outputBehavior(Behavior<T>::fromValuePullFunc(
+          Wormhole_BehaviorFunction<T>(m_data))) {}
 
 template <typename T>
 struct Wormhole_ClosedBehaviorFunction {
@@ -146,7 +149,7 @@ struct Wormhole_ClosedBehaviorFunction {
 template <typename T>
 Behavior<T> Wormhole<T>::setInputBehavior(const Behavior<T>& pm) const {
   m_data->first = true;
-  return Behavior<T>(Wormhole_ClosedBehaviorFunction<T>(*this, pm));
+  return Behavior<T>::fromValuePullFunc(Wormhole_ClosedBehaviorFunction<T>(*this, pm));
 }
 }
 #endif

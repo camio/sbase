@@ -1,15 +1,33 @@
 #ifndef SFP_CFUNC_HPP_
 #define SFP_CFUNC_HPP_
 
-/**\file sfp/cfunc.hpp
- *  Defines the sfp::cfunc metafunction that takes in a number of Type arguments
- *  and returns the corresponding curried function.
- *
- *  For example sfp::cfunc<char,int,long>::type is 
- *      boost::function< boost::function< long (int)>
- *                       (char)
- *                     >
- */
+//@PURPOSE: Provide metafunction for generating curried Boost.Function types.
+//
+//@CLASSES:
+//  sfp::cfunc: curried Boost.Function generating metafunction
+//
+//@DESCRIPTION: This component provides a single class, 'cfunc', which based on
+// its template argments, will produce a curried Boost.Function type.
+//
+// Usage
+// -----
+// This section illustrates intended use of this component.
+//
+// Example 1: Generation of Boost.Function types
+// - - - - - - - - - - - - - - - - - - - - - - -
+// Each template argument to 'cfunc' corresponds to a parameter of the function
+// with the final argument representing the result type.
+//
+// For example, the following invocation of 'cfunc',
+//..
+//  sfp::cfunc<char,int,long>::type
+//..
+// evaluates to
+//..
+//  boost::function< boost::function< long (int)>
+//                   (char)
+//                 >
+//..
 
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/comparison/greater.hpp>
