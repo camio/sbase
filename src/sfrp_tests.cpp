@@ -3,6 +3,7 @@
 #include <sfrp/behavior.t.hpp>
 #include <sfrp/behaviormap.t.hpp>
 #include <sfrp/behaviorpuller.t.hpp>
+#include <sfrp/behaviortimeutil.t.hpp>
 #include <sfrp/cachedincreasingpartialtimefunction.t.hpp>
 #include <sfrp/increasingpartialtimefunction.t.hpp>
 #include <sfrp/util.t.hpp>
@@ -14,6 +15,7 @@ void tests( stest::TestCollector & col ) {
   behaviorTests( col );
   behaviormapTests( col );
   behaviorpullerTests( col );
+  behaviortimeutilTests( col );
   cachedincreasingpartialtimefunctionTests( col );
   increasingpartialtimefunctionTests( col );
   utilTests( col );

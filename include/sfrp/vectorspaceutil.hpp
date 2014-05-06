@@ -2,6 +2,7 @@
 #define SFRP_VECTORSPACEUTIL_HPP_
 
 #include <sfrp/behavior.hpp>
+#include <sfrp/behaviormap.hpp>
 #include <sfrp/util.hpp>
 #include <sfrp/wormhole.hpp>
 #include <smisc/point1d.hpp>
@@ -40,7 +41,7 @@ template <typename T>
 Behavior<T> VectorSpaceUtil::sum(const Behavior<T>& v) {
   auto wh = sfrp::Wormhole<T>(smisc::zero<T>());
   return wh.setInputBehavior(
-      pmLift(&VectorSpaceUtil_Sum<T>, wh.outputBehavior(), v));
+      sfrp::BehaviorMap()(&VectorSpaceUtil_Sum<T>, wh.outputBehavior(), v));
 }
 
 template <typename V>
@@ -60,9 +61,9 @@ struct VectorSpaceUtil_Integral {
 
 template <typename T>
 Behavior<T> VectorSpaceUtil::integral(const Behavior<T>& v) {
-  const Behavior<T> slices =
-      pmMap(VectorSpaceUtil_Integral<T>(),
-            pmWithPrev(std::make_pair(smisc::zero<T>(), 0.0), pmWithTime(v)));
+  const Behavior<T> slices = sfrp::BehaviorMap()(
+      VectorSpaceUtil_Integral<T>(),
+      pmWithPrev(std::make_pair(smisc::zero<T>(), 0.0), pmWithTime(v)));
   return VectorSpaceUtil::sum(slices);
 }
 }

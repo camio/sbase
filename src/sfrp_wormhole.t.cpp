@@ -1,7 +1,7 @@
 #include <sfrp/wormhole.t.hpp>
 
 #include <sfrp/behaviorutil.hpp>
-#include <sfrp/util.hpp> // +
+#include <sfrp/behavioroperators.hpp> // +
 #include <sfrp/wormhole.hpp>
 #include <stest/testcollector.hpp>
 
