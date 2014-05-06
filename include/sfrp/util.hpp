@@ -6,7 +6,6 @@
 #include <boost/make_shared.hpp>
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/thread/mutex.hpp>
 #include <sboost/optionalutil.hpp>
 #include <scpp/operators.hpp>
 #include <scpp/pairutil.hpp>
@@ -14,6 +13,7 @@
 #include <sfrp/behavior.hpp>
 #include <sfrp/wormhole.hpp>
 #include <smisc/unit.hpp>
+#include <mutex>
 #include <type_traits>
 
 /* There are a few event functions that should be written for completeness's
@@ -641,7 +641,7 @@ namespace sfrp
                     v = OpOpT( opT );
                 m.unlock();
             }
-            boost::mutex m;
+            std::mutex m;
             V v;
         };
     }

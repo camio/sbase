@@ -2,8 +2,8 @@
 #define TCHAN_HPP_
 
 #include <boost/shared_ptr.hpp>
-#include <boost/thread/mutex.hpp>
 #include <list>
+#include <mutex>
 
 /** \file smisc/TChan.hpp
  * A channel used to communicate between threads
@@ -17,11 +17,11 @@ namespace smisc
         typedef T value_type;
         TChan( )
             : tPtr( boost::make_shared<std::list<T> >( ) )
-            , m( boost::make_shared<boost::mutex>() )
+            , m( boost::make_shared<std::mutex>() )
         {
         }
         boost::shared_ptr<std::list<T> > tPtr;
-        boost::shared_ptr<boost::mutex> m;
+        boost::shared_ptr<std::mutex> m;
     };
     template< typename TChanT, typename T >
     void tcWrite( const TChanT & tc, const T & t )

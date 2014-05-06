@@ -2,7 +2,7 @@
 #define SMISC_TVAR_HPP_
 
 #include <boost/shared_ptr.hpp>
-#include <boost/thread/mutex.hpp>
+#include <mutex>
 
 namespace smisc
 {
@@ -12,13 +12,13 @@ namespace smisc
         typedef T value_type;
         TVar( T t_ )
             : tPtr( boost::make_shared<T>( t_ ) )
-            , m( boost::make_shared<boost::mutex>() )
+            , m( boost::make_shared<std::mutex>() )
         {
         }
         //TODO: could this be made into a shared_ptr<std::pair<...>> instead?
         //          -DJS 9/6/2011
         boost::shared_ptr<T> tPtr;
-        boost::shared_ptr<boost::mutex> m;
+        boost::shared_ptr<std::mutex> m;
     };
 
     template< typename T >
