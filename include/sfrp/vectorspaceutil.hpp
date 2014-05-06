@@ -3,7 +3,6 @@
 
 #include <sfrp/behavior.hpp>
 #include <sfrp/behaviormap.hpp>
-#include <sfrp/util.hpp>
 #include <sfrp/wormhole.hpp>
 #include <smisc/point1d.hpp>
 #include <smisc/vectorspace.hpp>

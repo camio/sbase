@@ -6,6 +6,7 @@
 #include <sfrp/behaviortimeutil.t.hpp>
 #include <sfrp/eventmap.t.hpp>
 #include <sfrp/eventmapfunctionadapter.t.hpp>
+#include <sfrp/eventutil.t.hpp>
 #include <sfrp/cachedincreasingpartialtimefunction.t.hpp>
 #include <sfrp/increasingpartialtimefunction.t.hpp>
 #include <sfrp/util.t.hpp>
@@ -20,6 +21,7 @@ void tests( stest::TestCollector & col ) {
   behaviortimeutilTests( col );
   eventmapTests( col );
   eventmapfunctionadapterTests( col );
+  eventutilTests( col );
   cachedincreasingpartialtimefunctionTests( col );
   increasingpartialtimefunctionTests( col );
   utilTests( col );
