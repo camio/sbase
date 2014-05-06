@@ -2,9 +2,11 @@
 #define SFRP_EVENTUTIL_HPP_
 
 #include <boost/optional.hpp>
+#include <scpp/operators.hpp>
 #include <sboost/optionalutil.hpp>
 #include <sfrp/behavior.hpp>
 #include <sfrp/behaviormap.hpp>
+#include <sfrp/behaviorutil.hpp>
 #include <sfrp/wormhole.hpp>
 #include <utility>  // std::make_pair
 
@@ -37,6 +39,11 @@ struct EventUtil {
   static Behavior<boost::optional<B>> snapshot_(
       const Behavior<B>& b,
       const Behavior<boost::optional<A>>& e);
+
+  template <typename A>
+  static Behavior<boost::optional<A>> when(
+      const Behavior<bool>& b,
+      const Behavior<boost::optional<A>>& a);
 };
 
 // ===========================================================================
@@ -80,6 +87,15 @@ static Behavior<boost::optional<B>> EventUtil::snapshot_(
                              },
                              b,
                              e);
+}
+template <typename A>
+static Behavior<boost::optional<A>> EventUtil::when(
+    const Behavior<bool>& b,
+    const Behavior<boost::optional<A>>& a) {
+  return sfrp::BehaviorMap()(scpp::Operators::iff<boost::optional<A>>,
+                             b,
+                             a,
+                             sfrp::BehaviorUtil::always(boost::optional<A>()));
 }
 }
 #endif

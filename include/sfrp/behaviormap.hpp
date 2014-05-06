@@ -66,7 +66,7 @@
 // Now we expand the right side of the proof:
 //..
 // (μ⟦BehaviorMap()⟧ f) ∘ (μ⟦BehaviorMap()⟧ g) ≡
-// (λ (t₁,f₁) → (t₁, λt → f (f₁ t))) ∘ 
+// (λ (t₁,f₁) → (t₁, λt → f (f₁ t))) ∘
 //   (λ (t₁,f₁) → (t₁, λt → g (f₁ t))) ≡
 // λ (t₁, f₁) → (λ (t₁,f₁) → (t₁, λt → f (f₁ t))) (
 //   (λ (t₁,f₁) → (t₁, λt → g (f₁ t))) (t₁, f₁) )  invoke defn. of ∘
@@ -109,8 +109,7 @@ namespace sfrp {
 
 // This class implements a functor that applies a function to the values within
 // one or more behaviors, resulting in a new behavior.
-struct BehaviorMap
-{
+struct BehaviorMap {
   // Return the result type of applying this functor with the specified
   // 'FunctorApplicationExpression'.
   template <typename FunctorApplicationExpression>
@@ -133,10 +132,10 @@ struct BehaviorMap
 //                 INLINE DEFINITIONS
 // ===========================================================================
 
-template <typename Function, typename... ArgBehaviors >
+template <typename Function, typename... ArgBehaviors>
 struct BehaviorMap::result<BehaviorMap(Function, ArgBehaviors...)> {
-  typedef typename MapValuePullFunc_Result< Function, ArgBehaviors...>::type
-    OptionalBehaviorValue;
+  typedef typename MapValuePullFunc_Result<Function, ArgBehaviors...>::type
+      OptionalBehaviorValue;
   typedef typename OptionalBehaviorValue::value_type BehaviorValue;
   typedef sfrp::Behavior<BehaviorValue> type;
 };
@@ -147,7 +146,7 @@ BehaviorMap::
 operator()(Function function, ArgBehaviors... argBehaviors) const {
   typedef result<BehaviorMap(Function, ArgBehaviors...)>::type Result;
   return Result::fromValuePullFunc(
-      MapValuePullFunc<Function,ArgBehaviors...>( function, argBehaviors...) );
+      MapValuePullFunc<Function, ArgBehaviors...>(function, argBehaviors...));
 }
 }
 #endif

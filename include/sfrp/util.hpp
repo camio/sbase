@@ -45,19 +45,6 @@
 
 namespace sfrp
 {
-    template< typename A >
-    Behavior< boost::optional< A > > pmWhen
-        ( const Behavior< bool > & b
-        , const Behavior< boost::optional<A> > & a
-        )
-    {
-        return sfrp::BehaviorMap()
-            ( scpp::Operators::iff< boost::optional<A> >
-            , b
-            , a
-            , pmConst( boost::optional<A>() )
-            );
-    }
     namespace result_of
     {
         template< typename F, typename Ev >
