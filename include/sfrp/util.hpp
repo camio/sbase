@@ -173,33 +173,6 @@ namespace sfrp
         return pmMap( scpp::PairUtil::second<A,B>, pm );
     }
 
-
-    namespace detail
-    {
-        template< typename T>
-        struct PmConst
-        {
-            PmConst( const T & t_ )
-                : t( t_ )
-            {
-            }
-            T t;
-            typedef boost::optional<T> result_type;
-            result_type operator()( const double time ) const
-            {
-                return boost::make_optional( t );
-            }
-        };
-    }
-    /** { A : Set } → A → Behavior A
-     *  Returns a Behavior that is constantly the same value for all time
-     */
-    template<typename T>
-    Behavior<T> pmConst( const T & t )
-    {
-        return Behavior<T>::fromValuePullFunc( detail::PmConst<T>( t ) );
-    }
-
     namespace detail
     {
         template< typename T>

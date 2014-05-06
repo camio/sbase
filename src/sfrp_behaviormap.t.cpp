@@ -2,7 +2,7 @@
 
 #include <sfrp/behavior.hpp>
 #include <sfrp/behaviormap.hpp>
-#include <sfrp/util.hpp>  // sfrp::pmConst
+#include <sfrp/behaviorutil.hpp>
 #include <stest/testcollector.hpp>
 
 namespace {
@@ -16,15 +16,16 @@ namespace sfrp {
 void behaviormapTests(stest::TestCollector& col) {
   col.addTest("sfrp_behaviormap_blackBox", []()->void {
     Behavior<std::string> mappedBehavior =
-        BehaviorMap()([](int i) { return std::to_string(i); }, pmConst(3));
+        BehaviorMap()([](int i) { return std::to_string(i); },
+                      sfrp::BehaviorUtil::always(3));
     BOOST_CHECK_EQUAL(*mappedBehavior.pull(0.0), "3");
     BOOST_CHECK_EQUAL(*mappedBehavior.pull(2.0), "3");
 
     Behavior<std::string> mappedBehavior2 =
         BehaviorMap()([](int i,
                          std::string s) { return std::to_string(i) + s; },
-                      pmConst(3),
-                      pmConst(std::string("foo")));
+                      sfrp::BehaviorUtil::always(3),
+                      sfrp::BehaviorUtil::always(std::string("foo")));
     BOOST_CHECK_EQUAL(*mappedBehavior.pull(0.0), "3foo");
     BOOST_CHECK_EQUAL(*mappedBehavior.pull(2.0), "3foo");
 
@@ -32,9 +33,9 @@ void behaviormapTests(stest::TestCollector& col) {
         BehaviorMap()([](int i, std::string s, double d) {
                         return std::to_string(i) + s;
                       },
-                      pmConst(3),
-                      pmConst(std::string("foo")),
-                      pmConst(4.5));
+                      sfrp::BehaviorUtil::always(3),
+                      sfrp::BehaviorUtil::always(std::string("foo")),
+                      sfrp::BehaviorUtil::always(4.5));
     BOOST_CHECK_EQUAL(*mappedBehavior3.pull(0.0), "3foo");
     BOOST_CHECK_EQUAL(*mappedBehavior3.pull(2.0), "3foo");
   });

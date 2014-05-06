@@ -43,6 +43,7 @@ SOURCES += src/sfrp_behaviormap.cpp
 SOURCES += src/sfrp_behaviormap.t.cpp
 SOURCES += src/sfrp_behaviorpuller.cpp
 SOURCES += src/sfrp_behaviorpuller.t.cpp
+SOURCES += src/sfrp_behaviorutil.cpp
 SOURCES += src/sfrp_cachedpull.cpp
 SOURCES += src/sfrp_cachedpull.t.cpp
 SOURCES += src/sfrp_cachedincreasingpartialtimefunction.cpp

@@ -1,6 +1,7 @@
 #include <sfrp/wormhole.t.hpp>
 
-#include <sfrp/util.hpp> // +, pmConst
+#include <sfrp/behaviorutil.hpp>
+#include <sfrp/util.hpp> // +
 #include <sfrp/wormhole.hpp>
 #include <stest/testcollector.hpp>
 
@@ -20,7 +21,7 @@ void wormholeTests(stest::TestCollector& col)
 
     BOOST_CHECK( ! w.closed() );
 
-    const auto b = w.outputBehavior() + sfrp::pmConst(1);
+    const auto b = w.outputBehavior() + sfrp::BehaviorUtil::always(1);
 
     const auto b2 = w.setInputBehavior( b );
     BOOST_CHECK( w.closed() );
