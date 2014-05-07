@@ -9,7 +9,6 @@
 #include <sfrp/eventutil.t.hpp>
 #include <sfrp/cachedincreasingpartialtimefunction.t.hpp>
 #include <sfrp/increasingpartialtimefunction.t.hpp>
-#include <sfrp/util.t.hpp>
 #include <sfrp/vectorspaceutil.t.hpp>
 #include <sfrp/wormhole.t.hpp>
 
@@ -24,7 +23,6 @@ void tests( stest::TestCollector & col ) {
   eventutilTests( col );
   cachedincreasingpartialtimefunctionTests( col );
   increasingpartialtimefunctionTests( col );
-  utilTests( col );
   vectorspaceutilTests( col );
   wormholeTests( col );
 }
