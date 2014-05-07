@@ -29,10 +29,16 @@ struct BehaviorTimeUtil {
 template <typename T>
 Behavior<std::pair<T, T>> BehaviorTimeUtil::withPriorPull(
     const T& t0,
-    const Behavior<T>& pm) {
-  Wormhole<T> w = Wormhole<T>(t0);
-  return sfrp::BehaviorPairUtil::makePair(w.outputBehavior(),
-                                          w.setInputBehavior(pm));
+    const Behavior<T>& behavior) {
+  Wormhole<T> wormhole = Wormhole<T>(t0);
+  sfrp::Behavior<T> wormholeUpdateBehavior =
+      wormhole.setInputBehavior(behavior);
+  // This call is a bit subtle. We need to ensure that the pull on the pair
+  // occurs before the pull on 'wormholeUpdateBehavior'. Otherwise,
+  // 'wormhole.outputBehavior' may not be the delayed version.
+  return sfrp::BehaviorUtil::curtail(
+      sfrp::BehaviorPairUtil::makePair(wormhole.outputBehavior(), behavior),
+      wormholeUpdateBehavior);
 }
 
 template <typename T>
