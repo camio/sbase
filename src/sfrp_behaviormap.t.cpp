@@ -26,8 +26,8 @@ void behaviormapTests(stest::TestCollector& col) {
                          std::string s) { return std::to_string(i) + s; },
                       sfrp::BehaviorUtil::always(3),
                       sfrp::BehaviorUtil::always(std::string("foo")));
-    BOOST_CHECK_EQUAL(*mappedBehavior.pull(0.0), "3foo");
-    BOOST_CHECK_EQUAL(*mappedBehavior.pull(2.0), "3foo");
+    BOOST_CHECK_EQUAL(*mappedBehavior2.pull(0.0), "3foo");
+    BOOST_CHECK_EQUAL(*mappedBehavior2.pull(2.0), "3foo");
 
     Behavior<std::string> mappedBehavior3 =
         BehaviorMap()([](int i, std::string s, double d) {

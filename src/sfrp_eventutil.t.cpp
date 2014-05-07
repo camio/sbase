@@ -51,7 +51,7 @@ void eventutilTests(stest::TestCollector& col) {
         });
 
     sfrp::Behavior<boost::optional<int>> filtered =
-        sfrp::EventUtil::filter([](int i) { return i % 2; }, event);
+        sfrp::EventUtil::filter([](int i) { return i % 2 == 0; }, event);
     // Check that time 0.0 is filtered out because it is not even.
     BOOST_CHECK_EQUAL(filtered.pull(0.0),
                       boost::make_optional(boost::optional<int>()));
