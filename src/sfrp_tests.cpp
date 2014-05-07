@@ -1,6 +1,7 @@
 #include <sfrp/tests.hpp>
 
 #include <sfrp/behavior.t.hpp>
+#include <sfrp/behaviordebugutil.t.hpp>
 #include <sfrp/behaviormap.t.hpp>
 #include <sfrp/behaviorpuller.t.hpp>
 #include <sfrp/behaviortimeutil.t.hpp>
@@ -15,6 +16,7 @@
 namespace sfrp {
 void tests( stest::TestCollector & col ) {
   behaviorTests( col );
+  behaviordebugutilTests( col );
   behaviormapTests( col );
   behaviorpullerTests( col );
   behaviortimeutilTests( col );

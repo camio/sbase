@@ -1,6 +1,8 @@
 #ifndef SFRP_EVENTDEBUGUTIL_HPP_
 #define SFRP_EVENTDEBUGUTIL_HPP_
 
+//@SEE_ALSO: sfrp_behaviordebugutil
+
 #include <boost/optional.hpp>
 #include <sfrp/behavior.hpp>
 #include <sfrp/behaviordebugutil.hpp>

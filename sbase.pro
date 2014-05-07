@@ -40,6 +40,7 @@ SOURCES += src/sfp_tests.cpp
 SOURCES += src/sfrp_behavior.cpp
 SOURCES += src/sfrp_behavior.t.cpp
 SOURCES += src/sfrp_behaviordebugutil.cpp
+SOURCES += src/sfrp_behaviordebugutil.t.cpp
 SOURCES += src/sfrp_behaviormap.cpp
 SOURCES += src/sfrp_behaviormap.t.cpp
 SOURCES += src/sfrp_behavioroperators.cpp

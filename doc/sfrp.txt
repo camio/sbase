@@ -11,6 +11,8 @@
 /------------------
 : 'sfrp_behavior':
 :      Provide a time/value function representation for FRP.
+: 'sfrp_behaviordebugutil':
+:      Provide functions that assist in the debugging of behaviors.
 : 'sfrp_behaviormap':
 :      Provide a means to apply a plain function to behavior objects.
 : 'sfrp_behaviorpuller':
