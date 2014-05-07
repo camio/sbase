@@ -17,6 +17,11 @@ struct BehaviorUtil {
 
   // Return a behavior with values equivelent to the specified 'valueBehavior',
   // but is undefined whenever the specified 'curtailingBehavior' is undefined.
+  // The 'valueBehavior' is always pulled prior to the 'curtailingBehavior'.
+  //
+  // Note that 'curtial()' can be used to ensure that behaviors are pulled even
+  // if they aren't used. This application is frequently useful with wormholes,
+  // for example.
   template <typename T, typename U>
   static Behavior<T> curtail(const Behavior<T>& valueBehavior,
                              const Behavior<U>& curtailingBehavior);
