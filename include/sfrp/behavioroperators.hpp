@@ -34,7 +34,7 @@ Behavior<T> operator!(const Behavior<T>& a);
 // Note that we made this a free function because we cannot overload the '?:'
 // operator in C++.
 template <typename A>
-Behavior<A> if_(const Behavior<bool>& comparison,
+Behavior<A> ifThenElse(const Behavior<bool>& comparison,
                 const Behavior<A>& trueCase,
                 const Behavior<A>& falseCase);
 
@@ -72,15 +72,11 @@ Behavior<T> operator&&(const Behavior<T>& a, const Behavior<T>& b) {
 }
 
 template <typename A>
-Behavior<A> if_(const Behavior<bool>& comparison,
+Behavior<A> ifThenElse(const Behavior<bool>& comparison,
                 const Behavior<A>& trueCase,
                 const Behavior<A>& falseCase) {
-  return sfrp::BehaviorMap()([](bool comparison, A trueCase, A falseCase) {
-                               return comparison ? trueCase : falseCase;
-                             },
-                             comparison,
-                             trueCase,
-                             falseCase);
+  return sfrp::BehaviorMap()(
+      scpp::Operators::ifThenElse<A>, comparison, trueCase, falseCase);
 }
 }
 
