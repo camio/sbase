@@ -58,6 +58,7 @@ SOURCES += src/sfrp_cachedpull.t.cpp
 SOURCES += src/sfrp_cachedincreasingpartialtimefunction.cpp
 SOURCES += src/sfrp_cachedincreasingpartialtimefunction.t.cpp
 SOURCES += src/sfrp_eventdebugutil.cpp
+SOURCES += src/sfrp_eventdebugutil.t.cpp
 SOURCES += src/sfrp_eventmap.cpp
 SOURCES += src/sfrp_eventmap.t.cpp
 SOURCES += src/sfrp_eventmapfunctionadapter.cpp

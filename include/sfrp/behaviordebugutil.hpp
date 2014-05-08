@@ -37,8 +37,8 @@
 //                                     behaviorString);
 //..
 // Note that the 'watchedString' behavior must now be used in place of where the
-// original behavior was used to ensure that console logging side effect will be
-// used.
+// original behavior was used to ensure that console logging side effect will
+// happen.
 //
 // Although the above example used 'std::cout' as a means to visualize the value
 // of the behavior, one could alternatively use a real time rendering mechanism

@@ -29,6 +29,8 @@
 :      Provide a partial time function class that allows same-time pulls.
 : 'sfrp_cachedpull':
 :      Provide a time/value pair for use in caching time functions.
+: 'sfrp_eventdebugutil':
+:      Provide functions for the debugging of event-like behaviors.
 : 'sfrp_increasingpartialtimefunction':
 :      Provide a partial time function class that releases resources.
 : 'sfrp_mapvaluepullfunc':
