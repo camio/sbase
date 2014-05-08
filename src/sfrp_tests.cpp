@@ -7,6 +7,7 @@
 #include <sfrp/behaviorpairutil.t.hpp>
 #include <sfrp/behaviorpuller.t.hpp>
 #include <sfrp/behaviortimeutil.t.hpp>
+#include <sfrp/behaviorutil.t.hpp>
 #include <sfrp/eventmap.t.hpp>
 #include <sfrp/eventmapfunctionadapter.t.hpp>
 #include <sfrp/eventutil.t.hpp>
@@ -24,6 +25,7 @@ void tests( stest::TestCollector & col ) {
   behaviorpairutilTests( col );
   behaviorpullerTests( col );
   behaviortimeutilTests( col );
+  behaviorutilTests( col );
   eventmapTests( col );
   eventmapfunctionadapterTests( col );
   eventutilTests( col );

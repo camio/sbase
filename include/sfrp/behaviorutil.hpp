@@ -1,6 +1,102 @@
 #ifndef SFRP_BEHAVIORUTIL_HPP_
 #define SFRP_BEHAVIORUTIL_HPP_
 
+//@PURPOSE: Provide utility operations for 'Behavior' objects.
+//
+//@CLASSES:
+//  sfrp::BehaviorUtil: namespace for behavior utility operations.
+//
+//@SEE_ALSO: sfrp_behaviormap
+//
+//@DESCRIPTION: This component provides a single namespace class,
+// 'BehaviorUtil', which has several utility functions operating on 'Behavior'
+// objects. The operations provided here are "primitive" in the sense that they
+// provide a purely functional interface to 'Behavior's as opposed to the
+// built-in 'fromValuePullFunc()' function. These are the core building blocks
+// for more complex behaviors.
+//
+// Usage
+// -----
+// This section illustrates intended use of this component.
+//
+// Example 1: Behavior Creation
+// - - - - - - - - - - - - - -
+// Perhaps the simplest behavior is one that always has the same value at every
+// time. The following behavior is always '3'.
+//..
+//  sfrp::Behavior<int> always3 = sfrp::BehaviorUtil::always(3);
+//..
+// Another common behavior is the behavior that has a value equivelent to the
+// time for every time. For example, at time '0.0', it will have the value
+// '0.0'. At time '5.0', it will have value '5.0' and so on.
+//..
+//  sfrp::Behavior<double> time = sfrp::BehaviorUtil::time();
+//..
+// The 'pure' function directly converts a function of time into a behavior.
+// Here we have a behavior that has a value of the time multiplied by '2'.
+//..
+//  sfrp::Behavior<double> timeTimesTwo =
+//      sfrp::BehaviorUtil::pure([](double time) { return time * 2; });
+//..
+// Another example of 'pure' is a behavior that has value "hello" before time
+// '3' and value "world" afterwards.
+//..
+//  sfrp::Behavior<std::string> switchAtTime3 = sfrp::BehaviorUtil::pure([](
+//      double time) { return time < 3 ? std::string("hello") : "world"; });
+//..
+//
+// Example 2: Curtail
+// - - - - - - - - -
+// A FRP execution ends when a behavior is no longer defined. Lets say we have
+// an animation that loops forever called 'loopingAnimation' of type
+// 'sfrp::Behavior<Drawing>'. If we'd like to stop it after 500 seconds, we
+// first construct a behavior that is undefined after time '500.0'.
+//..
+//  sfrp::Behavior<smisc::Unit> undefinedAfter500 =
+//      sfrp::Behavior<smisc::Unit>::fromValuePullFunc([](double time) {
+//        return time < 500.0 ? boost::make_optional(smisc::Unit()) : boost::none;
+//      });
+//..
+// Its value, 'smisc::Unit', carries no information so it could be any type
+// really. We now use curtial to make our looping behavior stop after 500
+// seconds.
+//..
+//  sfrp::Behavior<Drawing> loopingAnimationUntil500 =
+//      sfrp::BehaviorUtil::curtail(loopingAnimation, undefinedAfter500);
+//..
+// Curtail ensures that the resulting behavior is only defined when both of its
+// input behaviors are defined.
+//
+// The fact that 'curtail()' needs to always check its second argument for
+// definedness gives it another use as well. When there is a behavior whose
+// value isn't needed, but still needs to be pulled regularly for some
+// side-effect, 'curtail()' can find use as well.
+//
+// Example 3: Math Functions
+// - - - - - - - - - - - - -
+// The 'map()' function takes functions over values and lifts them to functions
+// over behaviors. For instance, lets say we wish to create a 'sin' function
+// that works on behaviors.
+//..
+//  sfrp::Behavior<double> sin( sfrp::Behavior<double> value) {
+//    return sfrp::BehaviorUtil::map([](double d) { return std::sin(d); }, value);
+//  }
+//..
+// In this case we wrap 'std::sin' into an anonymous function because 'std::sin'
+// is an overloaded function and we need to disambiguate somehow.
+//
+// 'map()' can be used with any number of arguments. This is how we would wrap
+// the 'std::atan2' function:
+//..
+//  sfrp::Behavior<double> atan2(sfrp::Behavior<double> y,
+//                               sfrp::Behavior<double> x) {
+//    return sfrp::BehaviorUtil::map([](double y,
+//                                      double x) { return std::atan2(y, x); },
+//                                   y,
+//                                   x);
+//  }
+//..
+
 #include <sfrp/behavior.hpp>
 #include <sfrp/behaviormap.hpp>
 #include <type_traits>
