@@ -17,6 +17,8 @@
 :      Provide a means to apply a plain function to behavior objects.
 : 'sfrp_behavioroperators':
 :      Provide overloads of C++ operators for behaviors.
+: 'sfrp_behaviorpairutil':
+:      Provide utility operations for behaviors of 'std::pair's.
 : 'sfrp_behaviorpuller':
 :      Provide a functor that pulls behaviors at a particular time.
 : 'sfrp_cachedincreasingpartialtimefunction':

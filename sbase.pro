@@ -46,6 +46,7 @@ SOURCES += src/sfrp_behaviormap.t.cpp
 SOURCES += src/sfrp_behavioroperators.cpp
 SOURCES += src/sfrp_behavioroperators.t.cpp
 SOURCES += src/sfrp_behaviorpairutil.cpp
+SOURCES += src/sfrp_behaviorpairutil.t.cpp
 SOURCES += src/sfrp_behaviorpuller.cpp
 SOURCES += src/sfrp_behaviorpuller.t.cpp
 SOURCES += src/sfrp_behaviortimeutil.cpp
