@@ -21,6 +21,8 @@
 :      Provide utility operations for behaviors of 'std::pair's.
 : 'sfrp_behaviorpuller':
 :      Provide a functor that pulls behaviors at a particular time.
+: 'sfrp_behaviortimeutil':
+:      Provide behavior utility operations related to time.
 : 'sfrp_cachedincreasingpartialtimefunction':
 :      Provide a partial time function class that allows same-time pulls.
 : 'sfrp_cachedpull':
