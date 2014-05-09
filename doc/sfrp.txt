@@ -37,5 +37,7 @@
 :      Provide functor that pulls behaviors and applies a function to them.
 : 'sfrp_normedvectorspaceutil':
 :      Provide utility operations on normed vector space behaviors.
+: 'sfrp_vectorspaceutil':
+:      Provide utility operations on vector space behaviors.
 : 'sfrp_wormhole':
 :      Provide a means to create circular dependencies in FRP graphs.
