@@ -8,12 +8,53 @@
 
 namespace sfrp {
 void eventutilTests(stest::TestCollector& col) {
+  col.addTest("sfrp_eventutil_step", []()->void {
+    sfrp::Behavior<int> stepped = sfrp::EventUtil::step(
+        0,
+        sfrp::BehaviorUtil::pure([](double time) {
+          return time == 1.0
+                     ? boost::make_optional(1)
+                     : time == 2.0 ? boost::make_optional(2) : boost::none;
+        }));
+    BOOST_CHECK_EQUAL(stepped.pull(0.0), boost::make_optional(0));
+    BOOST_CHECK_EQUAL(stepped.pull(0.5), boost::make_optional(0));
+    BOOST_CHECK_EQUAL(stepped.pull(1.0), boost::make_optional(1));
+    BOOST_CHECK_EQUAL(stepped.pull(1.5), boost::make_optional(1));
+    BOOST_CHECK_EQUAL(stepped.pull(2.0), boost::make_optional(2));
+    BOOST_CHECK_EQUAL(stepped.pull(2.5), boost::make_optional(2));
+  });
   col.addTest("sfrp_eventutil_never", []()->void {
     sfrp::Behavior<boost::optional<int>> neverInt =
         sfrp::EventUtil::never<int>();
     BOOST_CHECK_EQUAL(neverInt.pull(0.0),
                       boost::make_optional(boost::optional<int>()));
     BOOST_CHECK_EQUAL(neverInt.pull(1.0),
+                      boost::make_optional(boost::optional<int>()));
+  });
+  col.addTest("sfrp_eventutil_merge", []()->void {
+    sfrp::Behavior<boost::optional<int>> lhs =
+        sfrp::Behavior<boost::optional<int>>::fromValuePullFunc([](
+            double time) {
+          return time == 0.0
+                     ? boost::make_optional(boost::make_optional(3))
+                     : time == 1.0
+                           ? boost::make_optional(boost::make_optional(3))
+                           : boost::make_optional(boost::optional<int>());
+        });
+    sfrp::Behavior<boost::optional<int>> rhs =
+        sfrp::Behavior<boost::optional<int>>::fromValuePullFunc([](
+            double time) {
+          return time == 1.0 ? boost::make_optional(boost::make_optional(9))
+                             : boost::make_optional(boost::optional<int>());
+        });
+
+    sfrp::Behavior<boost::optional<int>> merged =
+        sfrp::EventUtil::merge( lhs, rhs);
+    BOOST_CHECK_EQUAL(merged.pull(0.0),
+                      boost::make_optional(boost::make_optional(3)));
+    BOOST_CHECK_EQUAL(merged.pull(1.0),
+                      boost::make_optional(boost::make_optional(3)));
+    BOOST_CHECK_EQUAL(merged.pull(1.5),
                       boost::make_optional(boost::optional<int>()));
   });
   col.addTest("sfrp_eventutil_mergeWith", []()->void {
@@ -91,6 +132,82 @@ void eventutilTests(stest::TestCollector& col) {
                       boost::make_optional(boost::optional<int>(7)));
     BOOST_CHECK_EQUAL(accumulated.pull(1.5),
                       boost::make_optional(boost::optional<int>()));
+  });
+  col.addTest("sfrp_eventutil_snapshot", []()->void {
+    sfrp::Behavior<double> timeBehavior = sfrp::BehaviorUtil::time();
+    sfrp::Behavior<boost::optional<int>> event =
+        sfrp::BehaviorUtil::pure([](double time) {
+          return time == 1.0
+                     ? boost::make_optional(1)
+                     : time == 2.0 ? boost::make_optional(3) : boost::none;
+        });
+    sfrp::Behavior<boost::optional<std::pair<int, double>>> snapshot =
+        sfrp::EventUtil::snapshot(timeBehavior, event);
+    BOOST_CHECK(
+        snapshot.pull(0.0) ==
+        boost::make_optional(boost::optional<std::pair<int, double>>()));
+    BOOST_CHECK(snapshot.pull(1.0) == boost::make_optional(boost::make_optional(
+                                          std::make_pair(1, 1.0))));
+    BOOST_CHECK(
+        snapshot.pull(1.5) ==
+        boost::make_optional(boost::optional<std::pair<int, double>>()));
+    BOOST_CHECK(snapshot.pull(2.0) == boost::make_optional(boost::make_optional(
+                                          std::make_pair(3, 2.0))));
+  });
+  col.addTest("sfrp_eventutil_snapshot2", []()->void {
+    sfrp::Behavior<double> timeBehavior = sfrp::BehaviorUtil::time();
+    sfrp::Behavior<boost::optional<int>> event =
+        sfrp::BehaviorUtil::pure([](double time) {
+          return time == 1.0
+                     ? boost::make_optional(1)
+                     : time == 2.0 ? boost::make_optional(3) : boost::none;
+        });
+    sfrp::Behavior<boost::optional<double>> snapshot =
+        sfrp::EventUtil::snapshot_(timeBehavior, event);
+    BOOST_CHECK(snapshot.pull(0.0) ==
+                boost::make_optional(boost::optional<double>()));
+    BOOST_CHECK(snapshot.pull(1.0) ==
+                boost::make_optional(boost::make_optional(1.0)));
+    BOOST_CHECK(snapshot.pull(1.5) ==
+                boost::make_optional(boost::optional<double>()));
+    BOOST_CHECK(snapshot.pull(2.0) ==
+                boost::make_optional(boost::make_optional(2.0)));
+  });
+  col.addTest("sfrp_eventutil_when", []()->void {
+    sfrp::Behavior<boost::optional<int>> event =
+        sfrp::BehaviorUtil::pure([](double time) {
+          return time == 1.0
+                     ? boost::make_optional(1)
+                     : time == 2.0 ? boost::make_optional(3) : boost::none;
+        });
+    sfrp::Behavior<bool> whenBehavior = sfrp::BehaviorUtil::pure([](
+        double time) { return time < 1.5 ? true : false; });
+
+    sfrp::Behavior<boost::optional<int>> when =
+        sfrp::EventUtil::when(whenBehavior, event);
+
+    BOOST_CHECK(when.pull(0.0) == boost::make_optional(boost::optional<int>()));
+    BOOST_CHECK(when.pull(1.0) ==
+                boost::make_optional(boost::make_optional(1)));
+    BOOST_CHECK(when.pull(1.5) == boost::make_optional(boost::optional<int>()));
+    BOOST_CHECK(when.pull(2.0) == boost::make_optional(boost::optional<int>()));
+  });
+  col.addTest("sfrp_eventutil_just", []()->void {
+    sfrp::Behavior<boost::optional<boost::optional<int>>> event =
+        sfrp::BehaviorUtil::pure([](double time) {
+          return time == 1.0
+                     ? boost::make_optional(boost::make_optional(1))
+                     : time == 2.0
+                           ? boost::make_optional(boost::optional<int>())
+                           : boost::none;
+        });
+    sfrp::Behavior<boost::optional<int>> justedEvent = sfrp::EventUtil::just( event );
+
+    BOOST_CHECK(justedEvent.pull(0.0) == boost::make_optional(boost::optional<int>()));
+    BOOST_CHECK(justedEvent.pull(1.0) ==
+                boost::make_optional(boost::make_optional(1)));
+    BOOST_CHECK(justedEvent.pull(1.5) == boost::make_optional(boost::optional<int>()));
+    BOOST_CHECK(justedEvent.pull(2.0) == boost::make_optional(boost::optional<int>()));
   });
 }
 }

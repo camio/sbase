@@ -2,10 +2,10 @@
 #define SFRP_EVENTUTIL_HPP_
 
 #include <boost/optional.hpp>
-#include <scpp/operators.hpp>
 #include <sboost/optionalutil.hpp>
 #include <sfrp/behavior.hpp>
 #include <sfrp/behaviormap.hpp>
+#include <sfrp/behavioroperators.hpp>
 #include <sfrp/behaviorutil.hpp>
 #include <sfrp/eventmap.hpp>
 #include <sfrp/wormhole.hpp>
@@ -97,7 +97,8 @@ template <typename A>
 Behavior<boost::optional<A>> EventUtil::merge(
     const Behavior<boost::optional<A>>& leftEvent,
     const Behavior<boost::optional<A>>& rightEvent) {
-  return sfrp::BehaviorMap()(sboost::OptionalUtil::alternative<A>, a, b);
+  return sfrp::BehaviorMap()(
+      sboost::OptionalUtil::alternative<A>, leftEvent, rightEvent);
 }
 
 template <typename Function, typename A>
@@ -157,29 +158,26 @@ Behavior<boost::optional<std::pair<A, B>>> EventUtil::snapshot(
 }
 template <typename A, typename B>
 static Behavior<boost::optional<B>> EventUtil::snapshot_(
-    const Behavior<B>& b,
-    const Behavior<boost::optional<A>>& e) {
-  return sfrp::BehaviorMap()(detail::snapshot_Helper<A, B> [](
-                                 const B & b, const boost::optional<A> & opA) {
+    const Behavior<B>& behavior,
+    const Behavior<boost::optional<A>>& event) {
+  return sfrp::BehaviorMap()([](const B & b, const boost::optional<A> & opA) {
                                return opA ? boost::make_optional(b)
                                           : boost::none;
                              },
-                             b,
-                             e);
+                             behavior,
+                             event);
 }
 
 template <typename A>
 static Behavior<boost::optional<A>> EventUtil::when(
     const Behavior<bool>& b,
     const Behavior<boost::optional<A>>& a) {
-  return sfrp::BehaviorMap()(scpp::Operators::iff<boost::optional<A>>,
-                             b,
-                             a,
-                             sfrp::BehaviorUtil::always(boost::optional<A>()));
+  return sfrp::BehaviorOperators::ifThenElse(
+      b, a, sfrp::BehaviorUtil::always(boost::optional<A>()));
 }
 
 template <typename A>
-static Behavior<boost::optional<A>> just(
+static Behavior<boost::optional<A>> EventUtil::just(
     const Behavior<boost::optional<boost::optional<A>>>& event) {
   return BehaviorMap()(sboost::OptionalUtil_Join(), event);
 }
