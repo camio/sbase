@@ -49,8 +49,10 @@ namespace sfrp {
 struct BehaviorTimeUtil {
 
   // Return a behavior equivelent to the specified 'behavior' except it is
-  // paired up with the value of the previous pull to that behavior. The first
-  // pull is paired up with the specified 'pull0' value.
+  // paired up with the value of the previous pull to that behavior. The
+  // "previous" value is the first element of the pair and the "current" value
+  // is the second. The first pull is paired up with the specified 'pull0'
+  // value.
   template <typename T>
   static Behavior<std::pair<T, T>> withPriorPull(const T& pull0,
                                                  const Behavior<T>& behavior);
