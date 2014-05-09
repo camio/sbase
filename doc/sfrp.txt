@@ -35,5 +35,7 @@
 :      Provide a partial time function class that releases resources.
 : 'sfrp_mapvaluepullfunc':
 :      Provide functor that pulls behaviors and applies a function to them.
+: 'sfrp_normedvectorspaceutil':
+:      Provide utility operations on normed vector space behaviors.
 : 'sfrp_wormhole':
 :      Provide a means to create circular dependencies in FRP graphs.

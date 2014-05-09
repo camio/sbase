@@ -25,7 +25,23 @@
 // - - - - - - - - - - - -- - - -
 // Imagine that in a game, a heat seeking missile is emitted that follows a
 // particular enemy ship. This can be implemented using the 'smooth()' function.
-// 
+//
+// In this example, the missile moves at a maximum velocity of '3.0'. We use the
+// 'replaceInitialValue' function to ensure the missile starts at its initial
+// position (without that, the smoothing function would place the missile
+// directly on the target).
+//..
+//  sfrp::Behavior<smisc::Point2D> missileFollow(
+//      smisc::Point2D initialMissilePosition,
+//      sfrp::Behavior<smisc::Point2D> targetPosition) {
+//    const sfrp::Behavior<smisc::Point1D> missileVelocity =
+//        sfrp::BehaviorUtil::always(3.0);
+//    return sfrp::NormedVectorSpaceUtil::smooth(
+//        missileVelocity,
+//        sfrp::BehaviorTimeUtil::replaceInitialValue(targetPosition,
+//                                                    initialMissilePosition));
+//  }
+//..
 
 #include <sfrp/behavior.hpp>
 #include <sfrp/behaviormap.hpp>

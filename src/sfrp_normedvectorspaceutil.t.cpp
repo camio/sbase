@@ -4,14 +4,21 @@
 #include <sfrp/normedvectorspaceutil.hpp>
 #include <sfrp/behaviorutil.hpp>
 #include <smisc/point1dnormedvectorspace.hpp>
+#include <smisc/point2d.hpp>
+#include <smisc/point2dnormedvectorspace.hpp>
 #include <stest/testcollector.hpp>
 
-static void compilationTest() {
-  const sfrp::Behavior<double> pos = sfrp::BehaviorUtil::always(1.0);
-  const sfrp::Behavior<double> velocity = sfrp::BehaviorUtil::always(1.0);
-  const sfrp::Behavior<double> smoothedPos =
-      sfrp::NormedVectorSpaceUtil::smooth(velocity, pos);
+static sfrp::Behavior<smisc::Point2D> missileFollow(
+    smisc::Point2D initialMissilePosition,
+    sfrp::Behavior<smisc::Point2D> targetPosition) {
+  const sfrp::Behavior<smisc::Point1D> missileVelocity =
+      sfrp::BehaviorUtil::always(3.0);
+  return sfrp::NormedVectorSpaceUtil::smooth(
+      missileVelocity,
+      sfrp::BehaviorTimeUtil::replaceInitialValue(targetPosition,
+                                                  initialMissilePosition));
 }
+
 namespace sfrp {
 void normedvectorspaceutilTests(stest::TestCollector& col) {
   col.addTest("sfrp_normedvectorspaceutil_smooth", []()->void {
