@@ -12,11 +12,14 @@
 #include <utility>  // std::make_pair
 
 namespace sfrp {
+
+// This class implements a namespace for simple utility operations on
+// event-like 'Behavior' objects.
 struct EventUtil {
 
-  // Turn an event into a behavior. Whatever the value of the specified 'event'
-  // is, the behavior will have that value until the next occurance. The
-  // behaviors initial value is defined by the specified 't0'.
+  // Return a behavior that has an initial value of the specified 'initialValue'
+  // which changes to the a new value at every occurence of the specified
+  // 'event'.
   template <typename T>
   static Behavior<T> step(const T& t0,
                           const Behavior<boost::optional<T>>& event);
@@ -25,16 +28,17 @@ struct EventUtil {
   template <typename T>
   static Behavior<boost::optional<T>> never();
 
-  // Merge the specified 'leftEvent' and 'rightEvent' events. Preference is
-  // given to 'leftEvent' if there is an occurance at the same time.
+  // Return an event whose occurances are the union of the occurances of the
+  // specified 'leftEvent' and 'rightEvent'. Preference is given to 'leftEvent'
+  // if there is an occurance at the same time.
   template <typename A>
   static Behavior<boost::optional<A>> merge(
       const Behavior<boost::optional<A>>& leftEvent,
       const Behavior<boost::optional<A>>& rightEvent);
 
-  // Merge the specified 'leftEvent' and 'rightEvent' events. If both events
-  // occur at the same time, the specified 'function' is used to collect the
-  // results.
+  // Return an event whose occurances are the union of the occurances of the
+  // specified 'leftEvent' and 'rightEvent'. If both events occur at the same
+  // time, the specified 'function' is used to collect the results.
   template <typename Function, typename A>
   static Behavior<boost::optional<A>> mergeWith(
       Function function,
@@ -48,28 +52,37 @@ struct EventUtil {
       Function function,
       const Behavior<boost::optional<A>>& event);
 
+  // Return an event whose values are the result of repeated applications of the
+  // function within occurances of the specified 'accumulator'. The specified
+  // 'initialValue' is fed into the initial occurance of 'accumulator'. The
+  // returned behavior's occurance times will be the same as those of
+  // 'accumulator'.
   template <typename Function, typename A>
   static Behavior<boost::optional<A>> accumulate(
       A initialValue,
       const Behavior<boost::optional<Function>> accumulator );
 
+  // Return an event with the same occurances of the specified 'event' except
+  // they are paired with the values of the specified 'behavior' at those times.
   template <typename A, typename B>
   static Behavior<boost::optional<std::pair<A, B>>> snapshot(
       const Behavior<B>& behavior,
       const Behavior<boost::optional<A>>& event);
 
-  //..
-  //  pmSnapshot_ b e = map snd (pmSnapshot b e)
-  //..
+  // Return an event with the same occurances of the specified 'event' except
+  // the values are those of the specified 'behavior' at those times.
   template <typename A, typename B>
   static Behavior<boost::optional<B>> snapshot_(
-      const Behavior<B>& b,
-      const Behavior<boost::optional<A>>& e);
+      const Behavior<B>& behavior,
+      const Behavior<boost::optional<A>>& event);
 
+  // Return an event with the same occurances of the specified 'event' except
+  // when the specified 'boolBehavior' is false at those times, in which case
+  // the occurance is omitted.
   template <typename A>
   static Behavior<boost::optional<A>> when(
-      const Behavior<bool>& b,
-      const Behavior<boost::optional<A>>& a);
+      const Behavior<bool>& behavior,
+      const Behavior<boost::optional<A>>& event);
 
   // Return the result of converting an 'Event (Op a)' into an 'Event a',
   // removing all none instances.
