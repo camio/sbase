@@ -2,6 +2,7 @@
 
 #include <sfrp/eventdebugutil.hpp>
 #include <stest/testcollector.hpp>
+#include <iostream>
 
 static void example1(sfrp::Behavior<boost::optional<std::string>> stringEvent) {
   sfrp::Behavior<boost::optional<std::string>> watchedEvent =
