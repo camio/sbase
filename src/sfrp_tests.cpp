@@ -8,12 +8,13 @@
 #include <sfrp/behaviorpuller.t.hpp>
 #include <sfrp/behaviortimeutil.t.hpp>
 #include <sfrp/behaviorutil.t.hpp>
+#include <sfrp/cachedincreasingpartialtimefunction.t.hpp>
 #include <sfrp/eventdebugutil.t.hpp>
 #include <sfrp/eventmap.t.hpp>
 #include <sfrp/eventmapfunctionadapter.t.hpp>
 #include <sfrp/eventutil.t.hpp>
-#include <sfrp/cachedincreasingpartialtimefunction.t.hpp>
 #include <sfrp/increasingpartialtimefunction.t.hpp>
+#include <sfrp/normedvectorspaceutil.t.hpp>
 #include <sfrp/vectorspaceutil.t.hpp>
 #include <sfrp/wormhole.t.hpp>
 
@@ -33,6 +34,7 @@ void tests( stest::TestCollector & col ) {
   eventutilTests( col );
   cachedincreasingpartialtimefunctionTests( col );
   increasingpartialtimefunctionTests( col );
+  normedvectorspaceutilTests( col );
   vectorspaceutilTests( col );
   wormholeTests( col );
 }
