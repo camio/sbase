@@ -41,3 +41,5 @@
 :      Provide utility operations on vector space behaviors.
 : 'sfrp_wormhole':
 :      Provide a means to create circular dependencies in FRP graphs.
+: 'sfrp_wormholeutil':
+:      Provide utility operations for 'Wormhole' objects.
