@@ -2,6 +2,7 @@
 #define SMISC_POINT2DNORMEDVECTORSPACE_HPP_
 
 #include <smisc/point2d.hpp>
+#include <smisc/point2dvectorspace.hpp>
 #include <smisc/normedvectorspace.hpp>
 
 namespace smisc {
