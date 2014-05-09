@@ -1,10 +1,55 @@
 #include <sfrp/eventutil.t.hpp>
 
+#include <boost/function.hpp>
 #include <boost/optional.hpp>
 #include <boost/optional/optional_io.hpp>
 #include <sfrp/behavior.hpp>
 #include <sfrp/eventutil.hpp>
 #include <stest/testcollector.hpp>
+
+namespace {
+struct Color{};
+Color white() {
+  return Color();
+}
+struct Drawing{};
+struct Point2D{};
+
+static void example1() {
+  sfrp::Behavior<boost::optional<Color>> colorChanges;
+
+  sfrp::Behavior<Color> color = sfrp::EventUtil::step( white(), colorChanges );
+  sfrp::Behavior<Drawing> drawing;
+}
+static void example2() {
+  sfrp::Behavior<boost::optional<int>> mouseClick;
+  sfrp::Behavior<Point2D> mousePos;
+  boost::function<Color (Point2D)> posToColor;
+
+  sfrp::Behavior<boost::optional<Color>> colorChanges = sfrp::EventMap()(
+      posToColor, sfrp::EventUtil::snapshot_(mousePos, mouseClick));
+}
+static void example3() {
+  sfrp::Behavior<boost::optional<int>> scoreChanges;
+  sfrp::Behavior<int> score = sfrp::EventUtil::step(
+      0,
+      sfrp::EventUtil::accumulate(
+          0,
+          sfrp::EventMap()([](int change) {
+                             return boost::function<int(int)>([change](
+                                 int total) { return total + change; });
+                           },
+                           scoreChanges)));
+}
+static void example4() {
+  sfrp::Behavior<boost::optional<int>> powerupScoreChanges;
+  sfrp::Behavior<boost::optional<int>> enemyDestroyedScoreChanges;
+  {
+    sfrp::Behavior<boost::optional<int>> allScoreChanges =
+        sfrp::EventUtil::merge(powerupScoreChanges, enemyDestroyedScoreChanges);
+  }
+}
+}
 
 namespace sfrp {
 void eventutilTests(stest::TestCollector& col) {
