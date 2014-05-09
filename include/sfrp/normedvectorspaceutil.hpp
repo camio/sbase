@@ -1,6 +1,32 @@
 #ifndef SFRP_NORMEDVECTORSPACEUTIL_HPP_
 #define SFRP_NORMEDVECTORSPACEUTIL_HPP_
 
+//@PURPOSE: Provide utility operations on normed vector space behaviors.
+//
+//@CLASSES:
+//  sfrp::NormedVectorSpaceUtil: normed vector space behavior namespace
+//
+//@SEE_ALSO: sfrp_vectorspaceutil, smisc_normedvectorspace
+//
+//@DESCRIPTION: This component provides one namespace class,
+// 'NormedVectorSpaceUtil', which has a single function that smooths behaviors.
+// The 'smooth()' function takes in a target behavior and a velocity behavior
+// and returns a behavior that attempts to follow the targe behavior with the
+// constraint that its speed cannot exceed the velocity behavior.
+//
+// This function is intended for use ranging from moving to "teach point"
+// positions in robotics to making smooth looking animations in artistry work.
+//
+// Usage
+// -----
+// This section illustrates intended use of this component.
+//
+// Example 1: Heat seaking missile
+// - - - - - - - - - - - -- - - -
+// Imagine that in a game, a heat seeking missile is emitted that follows a
+// particular enemy ship. This can be implemented using the 'smooth()' function.
+// 
+
 #include <sfrp/behavior.hpp>
 #include <sfrp/behaviormap.hpp>
 #include <sfrp/behaviorpairutil.hpp>
@@ -30,12 +56,16 @@ struct NormedVectorSpaceUtil {
       const Behavior<NormedVectorSpace> target);
 
  private:
-  // The behavior is undefined unless 'maxVelocity > 0.0'.
+  // Return the value closest to the specified 'targetValueWithTime's
+  // value moving from 'currentValueWithTime's value without exceeding the
+  // specified 'velocity'. If 'currentValueWithTime.second' is '-1.0', then
+  // always return 'targetValueWithTime.first'. The behavior is undefined
+  // unless 'maxVelocity > 0.0'.
   template <typename NormedVectorSpace>
   static NormedVectorSpace smoothHelper(
       const smisc::Point1D& maxVelocity,
-      const std::pair<NormedVectorSpace, double>& previousTargetValueWithTime,
-      const std::pair<NormedVectorSpace, double>& currentTargetValueWithTime);
+      const std::pair<NormedVectorSpace, double>& currentValueWithTime,
+      const std::pair<NormedVectorSpace, double>& targetValueWithTime);
 };
 
 // ===========================================================================
@@ -45,20 +75,19 @@ struct NormedVectorSpaceUtil {
 template <typename NormedVectorSpace>
 NormedVectorSpace NormedVectorSpaceUtil::smoothHelper(
     const smisc::Point1D& maxVelocity,
-    const std::pair<NormedVectorSpace, double>& previousTargetValueWithTime,
-    const std::pair<NormedVectorSpace, double>& currentTargetValueWithTime) {
+    const std::pair<NormedVectorSpace, double>& currentValueWithTime,
+    const std::pair<NormedVectorSpace, double>& targetValueWithTime) {
 
   // When this is the first 'pull', we accept the target position as the
   // starting position.
-  if (previousTargetValueWithTime.second == -1.0)
-    return currentTargetValueWithTime.first;
+  if (currentValueWithTime.second == -1.0)
+    return targetValueWithTime.first;
 
-  const double dt =
-      currentTargetValueWithTime.second - previousTargetValueWithTime.second;
+  const double dt = targetValueWithTime.second - currentValueWithTime.second;
   assert(dt > 0.0);
   assert(maxVelocity > 0.0);
   const NormedVectorSpace dv =
-      currentTargetValueWithTime.first - previousTargetValueWithTime.first;
+      targetValueWithTime.first - currentValueWithTime.first;
   const smisc::Point1D normDv = smisc::norm(dv);
 
   assert(normDv >= 0.0);
@@ -67,13 +96,13 @@ NormedVectorSpace NormedVectorSpaceUtil::smoothHelper(
   assert(maxNormDv > 0.0);
 
   if (normDv <= maxNormDv) {
-    return currentTargetValueWithTime.first;
+    return targetValueWithTime.first;
   } else {
     // normDv must not be 0 otherwise
     // we would be in the if case.
     const NormedVectorSpace dvDir = dv / normDv;
     const NormedVectorSpace dv2 = dvDir * maxNormDv;
-    return previousTargetValueWithTime.first + dv2;
+    return currentValueWithTime.first + dv2;
   }
 }
 
