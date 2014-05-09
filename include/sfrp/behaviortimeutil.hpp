@@ -36,6 +36,8 @@
 //  }
 //..
 
+#include <boost/make_shared.hpp>
+#include <boost/shared_ptr.hpp>
 #include <sfrp/behavior.hpp>
 #include <sfrp/behaviorpairutil.hpp>
 #include <sfrp/behaviorutil.hpp>
@@ -57,6 +59,13 @@ struct BehaviorTimeUtil {
   // paired up with the current time.
   template <typename T>
   static Behavior<std::pair<T, double>> withTime(const Behavior<T>& behavior);
+
+  // Return a behavior equivelent to the specified 'behavior' except that is
+  // value up until the first 'pull()' occurence is replaced with the specified
+  // 'initialValue'.
+  template <typename T>
+  static Behavior<T> replaceInitialValue(const Behavior<T>& behavior,
+                                         const T& initialValue);
 };
 
 // ===========================================================================
@@ -82,6 +91,26 @@ template <typename T>
 Behavior<std::pair<T, double>> BehaviorTimeUtil::withTime(
     const Behavior<T>& pm) {
   return sfrp::BehaviorPairUtil::makePair(pm, sfrp::BehaviorUtil::time());
+}
+
+template <typename T>
+static Behavior<T> BehaviorTimeUtil::replaceInitialValue(
+    const Behavior<T>& behavior,
+    const T& initialValue)
+{
+  boost::shared_ptr<bool> initialValueAlreadyPulled =
+      boost::make_shared<bool>(false);
+  return sfrp::Behavior<T>::fromValuePullFunc(
+          [initialValueAlreadyPulled, behavior, initialValue](const double time)
+              ->boost::optional<T> {
+            if (*initialValueAlreadyPulled) {
+              return behavior.pull(time);
+            } else {
+              behavior.pull(time);
+              *initialValueAlreadyPulled = true;
+              return boost::make_optional(initialValue);
+            }
+          });
 }
 }
 #endif

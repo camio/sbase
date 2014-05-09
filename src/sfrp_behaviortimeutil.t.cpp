@@ -37,5 +37,25 @@ void behaviortimeutilTests(stest::TestCollector& col) {
     BOOST_CHECK(intBehaviorWithTime.pull(1.0) == std::make_pair(3, 1.0));
     BOOST_CHECK(intBehaviorWithTime.pull(3.0) == std::make_pair(3, 3.0));
   });
+  col.addTest("sfrp_behaviortimeutil_replaceInitialValue", []()->void {
+    {
+      sfrp::Behavior<int> replacedIntBehavior =
+          sfrp::BehaviorTimeUtil::replaceInitialValue(
+              sfrp::BehaviorUtil::always(3), 4);
+
+      BOOST_CHECK_EQUAL(replacedIntBehavior.pull(0.0), 4 );
+      BOOST_CHECK_EQUAL(replacedIntBehavior.pull(1.0), 3 );
+      BOOST_CHECK_EQUAL(replacedIntBehavior.pull(3.0), 3 );
+    }
+    {
+      sfrp::Behavior<int> replacedIntBehavior =
+          sfrp::BehaviorTimeUtil::replaceInitialValue(
+              sfrp::BehaviorUtil::always(3), 4);
+
+      BOOST_CHECK_EQUAL(replacedIntBehavior.pull(1.0), 4 );
+      BOOST_CHECK_EQUAL(replacedIntBehavior.pull(2.0), 3 );
+      BOOST_CHECK_EQUAL(replacedIntBehavior.pull(3.0), 3 );
+    }
+  });
 }
 }
