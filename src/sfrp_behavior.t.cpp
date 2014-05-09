@@ -3,7 +3,10 @@
 #include <boost/make_shared.hpp>
 #include <sfrp/behavior.hpp>
 #include <stest/testcollector.hpp>
+#include <chrono>
+#include <ctime>
 #include <list>
+#include <thread>
 #include <utility>
 #include <iterator>  // std::next
 
@@ -89,6 +92,52 @@ void example3Revised()
         return boost::make_optional(iterator->value());
       });
 }
+
+struct Drawing {
+};
+void draw(Drawing) {}
+
+void example4( ) {
+  sfrp::Behavior<Drawing> drawingBehavior;
+
+  const std::time_t initialCalendarTime = std::time(0);
+  std::time_t currentCalendarTime = initialCalendarTime;
+  for (;;) {
+    const double time = std::difftime( currentCalendarTime, initialCalendarTime );
+    boost::optional<Drawing> drawing = drawingBehavior.pull(time);
+    if( drawing )
+      draw( *drawing );
+    else
+      // Behavior no longer defined
+      return;
+    currentCalendarTime = std::time(0);
+  }
+}
+void example4_2( ) {
+  sfrp::Behavior<Drawing> drawingBehavior;
+
+  const std::time_t initialCalendarTime = std::time(0);
+  std::time_t currentCalendarTime = initialCalendarTime;
+  for (;;) {
+    const double time = std::difftime( currentCalendarTime, initialCalendarTime );
+    boost::optional<Drawing> drawing = drawingBehavior.pull(time);
+    if( drawing )
+      draw( *drawing );
+    else
+      // Behavior no longer defined
+      return;
+
+    currentCalendarTime = std::time(0);
+    const double nextTime = std::difftime( currentCalendarTime, initialCalendarTime );
+    const double minimumSecondsBetweenFrames = 1.0/60.0;
+    if( minimumSecondsBetweenFrames > nextTime - time ) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(
+          int(1000 * (minimumSecondsBetweenFrames - (nextTime - time)))));
+      currentCalendarTime = std::time(0);
+    }
+  }
+}
+
 }
 
 namespace sfrp {

@@ -335,6 +335,52 @@
 //
 // Example 4: Retrieving Values
 // - - - - - - - - - - - - - -
+// Once a FRP graph has been set up, values are retrieved using the 'pull()'
+// function of behaviors.
+//
+// Presuming we have a 'drawingBehavior' value of type
+// 'sfrp::Behavior<Drawing>', we could write an animated rendering routine as
+// follows:
+//..
+//  const std::time_t initialCalendarTime = std::time(0);
+//  std::time_t currentCalendarTime = initialCalendarTime;
+//  for (;;) {
+//    const double time = std::difftime( currentCalendarTime, initialCalendarTime );
+//    boost::optional<Drawing> drawing = drawingBehavior.pull(time);
+//    if( drawing )
+//      draw( *drawing );
+//    else
+//      // Behavior no longer defined
+//      return;
+//    currentCalendarTime = std::time(0);
+//  }
+//..
+// The drawback of this fast-as-possible pull method is that the CPU will be
+// used to its full capacity even though it may not be necessary to have frame
+// rates beyond 60Hz. In this version we ensure that the frame rate will not
+// have a higher frequency than 60Hz.
+//..
+//  const std::time_t initialCalendarTime = std::time(0);
+//  std::time_t currentCalendarTime = initialCalendarTime;
+//  for (;;) {
+//    const double time = std::difftime( currentCalendarTime, initialCalendarTime );
+//    boost::optional<Drawing> drawing = drawingBehavior.pull(time);
+//    if( drawing )
+//      draw( *drawing );
+//    else
+//      // Behavior no longer defined
+//      return;
+//
+//    currentCalendarTime = std::time(0);
+//    const double nextTime = std::difftime( currentCalendarTime, initialCalendarTime );
+//    const double minimumSecondsBetweenFrames = 1.0/60.0;
+//    if( minimumSecondsBetweenFrames > nextTime - time ) {
+//      std::this_thread::sleep_for(std::chrono::milliseconds(
+//          int(1000 * (minimumSecondsBetweenFrames - (nextTime - time)))));
+//      currentCalendarTime = std::time(0);
+//    }
+//  }
+//..
 
 #include <boost/function.hpp>
 #include <boost/make_shared.hpp>
